@@ -78,6 +78,7 @@ void Blackjack(){
 
 int main(int argc, char const *argv[])
 {
+    cout<<"To jest blackjack"<<endl;
     Blackjack();
     return 0;
 }

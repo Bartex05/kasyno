@@ -47,11 +47,11 @@ void Blackjack(){
         // Wypełnienie vectora wszystkimi kartami używanymi podczas gry w Blackjack i potasowanie jej
     for(int i = 0; i < 4; i++){
         for(int j = 1; j <= 13; j++){
-            Card playCard(0,"Pik");     //Podstawowa karta jest ostatnią wpisywaną aby zmniejszyć ilość wykonywanych działań
+            Card playCard(0,"Spades");     //Podstawowa karta jest ostatnią wpisywaną aby zmniejszyć ilość wykonywanych działań
 
-            if(i == 0){playCard.setFaceType("Kier");}
-            else if(i == 1){playCard.setFaceType("Karo");}
-            else if(i == 2){playCard.setFaceType("Trefl");}
+            if(i == 0){playCard.setFaceType("Hearts");}
+            else if(i == 1){playCard.setFaceType("Diamonds");}
+            else if(i == 2){playCard.setFaceType("Clubs");}
 
             if(j > 10){
                 playCard.setFaceValue(10);
@@ -66,19 +66,20 @@ void Blackjack(){
     mt19937 g(rd());
     shuffle(playingCards.begin(),playingCards.end(),g);
 
-    // Rozdzielanie pierwszych dwóch kart dealera i gracza
+        // Rozdzielanie pierwszych dwóch kart dealera i gracza
     for(int i = 0; i < 2; i++){
         dealerCards.push_back(playingCards.back());
         playingCards.pop_back();
         playerCards.push_back(playingCards.back());
         playingCards.pop_back();
     }
-            // Test comment TODO
+    
+        // Logika dobierania Dealera
+    
 }
 
 int main(int argc, char const *argv[])
 {
-    cout<<"To jest blackjack"<<endl;
     Blackjack();
     return 0;
 }

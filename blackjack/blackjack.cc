@@ -50,6 +50,7 @@ int Blackjack(int money){
     vector<Card> playingCards;
     vector<Card> dealerCards;
     vector<Card> playerCards;
+    vector<Card> splitPlayerCards;
 
     cout<<"You have chosen Blackjack"<<endl;
     cout<<"At this casino there are no Hole Cards and the Dealer doesn't check the face-down card until all player actions are complete"<<endl;
@@ -93,7 +94,7 @@ int Blackjack(int money){
     mt19937 g(rd());
     shuffle(playingCards.begin(),playingCards.end(),g);
 
-        //  Rozdzielanie pierwszych dwóch kart dealera i gracza
+        //  --->    PIERWSZE ROZDANIE KART  <---
     for(int i = 0; i < 2; i++){
         dealerCards.push_back(playingCards.back());
         if(i == 1){
@@ -104,8 +105,9 @@ int Blackjack(int money){
         playingCards.pop_back();
     }
 
-        //  Wybór gracza
-    cout<<"Your cards: "<<endl;
+        //  --->    GRACZ    <---
+        //  Wypisanie posiadanych kart gracza
+    cout<<"Your cards: "<<endl;             
     for(auto pCard : playerCards){
         if(pCard.getFigureType() == "Number"){
             cout<<pCard.getFaceValue()<<" of "<<pCard.getFaceType()<<endl;
@@ -114,10 +116,17 @@ int Blackjack(int money){
         }
     }
 
-        //  Logika gry i akcji Dealera
-    if(playerCards.at(0).getFaceValue() + playerCards.at(1).getFaceValue() == 21){      //Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę
+        //Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę bo ma natural
+    if(playerCards.at(0).getFaceValue() + playerCards.at(1).getFaceValue() == 21){
+        cout<<"You got a NATURAL set. You win with 150% bet money.";
         return money*2.5;
     }
+
+        //Double down
+    
+
+        //  --->    DEALER    <---
+
     return money;
 }
 

@@ -9,24 +9,22 @@ using namespace std;
 class Player{
     private:
         int id;
-        int money;
+        int money;                                   
         string nickname;
     public:
-        Player(int id, string nickname){                //  Konstruktor przy tworzeniu nowego obiektu gracza
-            this->id = id;
-            this->nickname = nickname;
-            this->money = 5000;                         //  Startowa ilość kasy do ustalenia
-        }
-        Player(int id, string nickname, int money){     //  Konstruktor przy tworzeniu obiektu currentPlayer za pomocą danych z pliku players.txt
+        Player(){                                           //  Defaults
+            this->id = 0;
+            this->nickname = "placeholder";
+            this->money = 5000;                             //  Startowa ilość kasy do ustalenia
+        };
+        Player(int id, string nickname, int money){         //  Konstruktor przy tworzeniu obiektu currentPlayer za pomocą danych z pliku players.txt
             this->id = id;
             this->nickname = nickname;
             this->money = money;
         }
-        void setMoney(int money){                       //  Zapisywanie i pobieranie wartości
-            this->money = money;
-        }
-        int getMoney(){                                 
-            return this->money;
+
+        void setId(int id){                                 //  Zapisywanie i pobieranie wartości
+            this->id = id;
         }
         void setNickname(string nickname){
             this->nickname = nickname;
@@ -34,11 +32,20 @@ class Player{
         string getNickname(){                           
             return this->nickname;
         }
-        void setId(int id){
-            this->id = id;
+        void setMoney(int money){                       
+            this->money = money;
         }
+        int getMoney(){                                 
+            return this->money;
+        }
+        
+        int addPlayer(string);
+        int loadPlayer();
 };
 
+int Player::addPlayer(string nickname){
+    
+}
 
 int main(int argc, char const *argv[])
 {

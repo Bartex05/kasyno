@@ -28,43 +28,17 @@ class Player{
         int getMoney(){                                 
             return this->money;
         }
+        void setNickname(string nickname){
+            this->nickname = nickname;
+        }
         string getNickname(){                           
             return this->nickname;
         }
+        void setId(int id){
+            this->id = id;
+        }
 };
 
-Player getPlayer(string nickname){                      //  Pobieranie danych gracza z pliku players.txt
-    ifstream txtfile;
-    txtfile.open("players.txt");
-
-    string line;
-    if(txtfile.is_open()){                              //  Jak plik został otwarty to wyszukuje nazwy gracza w pliku players.txt i tworzy obiekt DYNAMICZNY aktualnego gracza currentPlayer
-        while(getline(txtfile, line)){
-            int res = line.find(nickname);
-            if(res != string::npos){
-                if(res-1 == ',' && res+nickname.length() == ','){
-                    auto pos = line.find(",");
-                    int id = stoi(line.substr(0,pos));
-                    line.erase(0,pos+1);
-                    pos = line.find(",");
-                    string nickname = line.substr(0,pos);
-                    line.erase(0,pos+1);
-                    int money = stoi((line));
-                    Player tempPlayer(id,nickname,money);
-                    return tempPlayer;
-                }
-            }
-        }
-    }else{                                              //  Jak jest błąd pliku to przekazuje błąd i wychodzi z funkcji
-        cerr<<"File failed to open or doesn't exist and failed to create current player"<<endl;
-    }
-    txtfile.close();
-}
-
-Player createPlayer(){
-    Player currentPlayer = getPlayer("TestPlayer");
-    cout<<currentPlayer.getNickname();
-}
 
 int main(int argc, char const *argv[])
 {

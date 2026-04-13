@@ -51,7 +51,9 @@ int Blackjack(int money){
     vector<Card> dealerCards;
     vector<Card> playerCards;
 
-    cout<<"Does dealer hit or stand on soft 17? (H/S): ";     //Wybór miękkiej 17
+    cout<<"You have chosen Blackjack"<<endl;
+    cout<<"At this casino there are no Hole Cards and the Dealer doesn't check the face-down card until all player actions are complete"<<endl;
+    cout<<"Are you going to approach the table where the dealer Hits or the table where he Stays at soft 17? (H/S): ";     //Wybór miękkiej 17
     string soft17;
     while(true){
         cin>>soft17;
@@ -103,7 +105,14 @@ int Blackjack(int money){
     }
 
         //  Wybór gracza
-
+    cout<<"Your cards: "<<endl;
+    for(auto pCard : playerCards){
+        if(pCard.getFigureType() == "Number"){
+            cout<<pCard.getFaceValue()<<" of "<<pCard.getFaceType()<<endl;
+        }else{
+            cout<<pCard.getFigureType()<<" of "<<pCard.getFaceType()<<endl;
+        }
+    }
 
         //  Logika gry i akcji Dealera
     if(playerCards.at(0).getFaceValue() + playerCards.at(1).getFaceValue() == 21){      //Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę

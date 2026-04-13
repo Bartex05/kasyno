@@ -21,13 +21,13 @@ class Player{
             this->nickname = nickname;
             this->money = money;
         }
-        void setMoney(int money){
+        void setMoney(int money){                       //  Zapisywanie pieniędzy w formacie wstawiania nowej wartości
             this->money = money;
         }
-        int getMoney(){
+        int getMoney(){                                 //  Pobieranie pieniędzy
             return this->money;
         }
-        string getNickname(){
+        string getNickname(){                           //  Pobieranie nazwy gracza (ustalanie nazwy gracza można zrobić tylko przy tworzeniu obiektu klasy)
             return this->nickname;
         }
 };

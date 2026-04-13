@@ -75,7 +75,7 @@ void Blackjack(){
     }
     
         // Logika dobierania Dealera
-    
+        cout<<"TestBranch";
 }
 
 int main(int argc, char const *argv[])

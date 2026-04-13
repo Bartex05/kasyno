@@ -5,11 +5,11 @@
 
 using namespace std;
 
-        // Podstawowa klasa karty
+        //  Podstawowa klasa karty
 class Card{
     private:
         int faceValue;
-        string faceType;
+        string faceType, figureType;
         bool isHidden;
     
     public:
@@ -31,6 +31,12 @@ class Card{
         string getFaceType(){
             return this->faceType;
         }
+        void setFigureType(string figureType){
+            this->figureType = figureType;
+        }
+        string getFigureType(){
+            return this->figureType;
+        }
         void setIsHidden(bool isHidden){
             this->isHidden = isHidden;
         }
@@ -39,12 +45,20 @@ class Card{
         }
 };
 
-void Blackjack(){
-        // Vectory wszystkich kart, dealera i gracza
+int Blackjack(int money){
+        //  Vectory wszystkich kart, dealera i gracza
     vector<Card> playingCards;
     vector<Card> dealerCards;
     vector<Card> playerCards;
-        // Wypełnienie vectora wszystkimi kartami używanymi podczas gry w Blackjack i potasowanie jej
+
+    cout<<"Does dealer hit or stand on soft 17? (H/S): ";     //Wybór miękkiej 17
+    string soft17;
+    while(true){
+        cin>>soft17;
+        if(soft17 == "H" || soft17 == "S"){break;}
+    }
+
+        //  Wypełnienie vectora wszystkimi kartami używanymi podczas gry w Blackjack i potasowanie jej
     for(int i = 0; i < 4; i++){
         for(int j = 1; j <= 13; j++){
             Card playCard(0,"Spades");     //Podstawowa karta jest ostatnią wpisywaną aby zmniejszyć ilość wykonywanych działań
@@ -55,8 +69,19 @@ void Blackjack(){
 
             if(j > 10){
                 playCard.setFaceValue(10);
+                if(j==11){
+                    playCard.setFigureType("Jack");
+                }else if(j==12){
+                    playCard.setFigureType("Queen");
+                }else{
+                    playCard.setFigureType("King");
+                }
+            }else if(j == 1){
+                playCard.setFaceValue(11);
+                playCard.setFigureType("Ace");
             }else{
                 playCard.setFaceValue(j);
+                playCard.setFigureType("Number");
             }
 
             playingCards.push_back(playCard);
@@ -66,20 +91,29 @@ void Blackjack(){
     mt19937 g(rd());
     shuffle(playingCards.begin(),playingCards.end(),g);
 
-        // Rozdzielanie pierwszych dwóch kart dealera i gracza
+        //  Rozdzielanie pierwszych dwóch kart dealera i gracza
     for(int i = 0; i < 2; i++){
         dealerCards.push_back(playingCards.back());
+        if(i == 1){
+            dealerCards.back().setIsHidden(true);
+        }
         playingCards.pop_back();
         playerCards.push_back(playingCards.back());
         playingCards.pop_back();
     }
-    
-        // Logika dobierania Dealera
-        cout<<"TestBranch";
+
+        //  Wybór gracza
+
+
+        //  Logika gry i akcji Dealera
+    if(playerCards.at(0).getFaceValue() + playerCards.at(1).getFaceValue() == 21){      //Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę
+        return money*2.5;
+    }
+    return money;
 }
 
 int main(int argc, char const *argv[])
 {
-    Blackjack();
+    Blackjack(5000);
     return 0;
 }

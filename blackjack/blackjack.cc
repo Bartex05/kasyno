@@ -46,6 +46,19 @@ class Card{
 };
 
 int Blackjack(int money){
+    int bettingMoney;
+    cout<<"Current bank amount: "<<money<<endl;
+    cout<<"How much are you going to bet? (Note: The lowest denomination is of a white chip worth $1): "<<endl;
+    while(money < bettingMoney < 1){
+        cin>>bettingMoney;
+        if(money < bettingMoney){
+            cout<<"You can't bet the money you don't have"<<endl;
+        }
+        if(bettingMoney < 1){
+            cout<<"You can't bet negative or zero amount of money"<<endl;
+        }
+        cout<<"How much are you betting?: ";
+    }
         //  Vectory wszystkich kart, dealera i gracza
     vector<Card> playingCards;
     vector<Card> dealerCards;
@@ -105,8 +118,23 @@ int Blackjack(int money){
         playingCards.pop_back();
     }
 
+    bool isPlayerStaying = false;   //  Ta zmienna to flaga służąca do sprawdzania czy gracz skończył dobierać karty aby dealer mógł dobierać swoje i zakończyć nie "NATURALNĄ" grę.
+
     while(true){    //  PĘTLA GRY
-        //  --->    GRACZ    <---
+        //  Wypisanie posiadanych kart dealera bez wypisywania ukrytej karty
+    cout<<"Dealer's cards: "<<endl;
+    for(auto pCard : dealerCards){
+        if(pCard.getIsHidden() == false){
+            if(pCard.getFigureType() == "Number"){
+                cout<<pCard.getFaceValue()<<" of "<<pCard.getFaceType()<<endl;
+            }else{
+                cout<<pCard.getFigureType()<<" of "<<pCard.getFaceType()<<endl;
+            }
+        }else{
+            cout<<"* FACE DOWN *"<<endl;
+        }
+    }
+
         //  Wypisanie posiadanych kart gracza
     cout<<"Your cards: "<<endl;             
     for(auto pCard : playerCards){
@@ -116,11 +144,22 @@ int Blackjack(int money){
             cout<<pCard.getFigureType()<<" of "<<pCard.getFaceType()<<endl;
         }
     }
+        //  Jeśli gracz wybrał split to wypisz też karty z drugiej talii
+    if(splitPlayerCards.size() != 0){
+        cout<<"Your split hand cards: "<<endl;
+        for (auto pCard : splitPlayerCards){
+            if(pCard.getFigureType() == "Number"){
+                cout<<pCard.getFaceValue()<<" of "<<pCard.getFaceType()<<endl;
+            }else{
+                cout<<pCard.getFigureType()<<" of "<<pCard.getFaceType()<<endl;
+            }
+        }
+    }
 
         //  Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę bo ma natural
     if(playerCards.at(0).getFaceValue() + playerCards.at(1).getFaceValue() == 21){
         cout<<"You got a NATURAL set of cards. You win with 150% bet money.";
-        return money*2.5;
+        return money + bettingMoney * 1.5;
     }
 
         //  Logika wyborów gracza
@@ -131,18 +170,34 @@ int Blackjack(int money){
     string playerChoice;
     while(true){
         cin>>playerChoice;
-        if(playerCards.size() != 2){
+        if(playerCards.size() + splitPlayerCards.size() > 2){
             if(playerChoice == "H" || playerChoice == "S"){
                 break;
             }
         }else{
-            if(playerChoice == "H" || playerChoice == "S" || playerChoice == "DD" || playerChoice == "SP" || playerChoice == "SU"){
+            if(playerChoice == "H" || playerChoice == "S" || playerChoice == "DD"){
                 break;
+            }else if(playerChoice == "SP"){
+                if(playerCards.at(0).getFigureType() == playerCards.at(1).getFigureType() && playerCards.at(0).getFaceValue() == playerCards.at(1).getFaceValue()){
+                    splitPlayerCards.push_back(playerCards.back());
+                    playerCards.pop_back();
+                }else{
+                    cout<<"Can't split the hand because the two cards in it are not the same face and value"<<endl;
+                }
+            }else if(playerChoice == "SU"){
+                cout<<"You have decided to surrender. You will recieve back half of your betting amount";
+                return money + bettingMoney * 0.5;
             }
         }
     }
-        //  HIT
-    
+
+        //  CHOICES
+    if(playerChoice == "H"){    //  HIT
+        playerCards.push_back(playingCards.back());
+        playerCards.pop_back();
+    }else if(playerChoice == "S"){  //  SPLIT
+        isPlayerStaying = true;
+    }                           //  TODO: DOUBLE DOWN and SPLIT
 
         //  --->    DEALER    <---  == TODO ==
 

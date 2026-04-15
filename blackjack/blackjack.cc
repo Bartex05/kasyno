@@ -123,7 +123,7 @@ int Blackjack(int money){
         return money*2.5;
     }
 
-        //  Wybory gracza
+        //  Logika wyborów gracza
     if(playerCards.size() == 2){
         cout<<"Double down (DD), Split (SP), Surrender (SU), ";
     }
@@ -131,6 +131,15 @@ int Blackjack(int money){
     string playerChoice;
     while(true){
         cin>>playerChoice;
+        if(playerCards.size() != 2){
+            if(playerChoice == "H" || playerChoice == "S"){
+                break;
+            }
+        }else{
+            if(playerChoice == "H" || playerChoice == "S" || playerChoice == "DD" || playerChoice == "SP" || playerChoice == "SU"){
+                break;
+            }
+        }
     }
         //  HIT
     

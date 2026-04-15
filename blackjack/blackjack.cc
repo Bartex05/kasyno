@@ -105,6 +105,7 @@ int Blackjack(int money){
         playingCards.pop_back();
     }
 
+    while(true){    //  PĘTLA GRY
         //  --->    GRACZ    <---
         //  Wypisanie posiadanych kart gracza
     cout<<"Your cards: "<<endl;             
@@ -116,16 +117,27 @@ int Blackjack(int money){
         }
     }
 
-        //Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę bo ma natural
+        //  Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę bo ma natural
     if(playerCards.at(0).getFaceValue() + playerCards.at(1).getFaceValue() == 21){
-        cout<<"You got a NATURAL set. You win with 150% bet money.";
+        cout<<"You got a NATURAL set of cards. You win with 150% bet money.";
         return money*2.5;
     }
 
-        //Double down
+        //  Wybory gracza
+    if(playerCards.size() == 2){
+        cout<<"Double down (DD), Split (SP), Surrender (SU), ";
+    }
+    cout<<"Hit (H) or Stay (S)? : "<<endl;
+    string playerChoice;
+    while(true){
+        cin>>playerChoice;
+    }
+        //  HIT
     
 
-        //  --->    DEALER    <---
+        //  --->    DEALER    <---  == TODO ==
+
+    }
 
     return money;
 }

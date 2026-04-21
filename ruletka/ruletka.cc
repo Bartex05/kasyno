@@ -12,7 +12,7 @@ cout << "   |  0  |  00  |\n";
 cout << "---------------------------------\n";
 cout << "| 1R  | 2B  | 3R  |             |\n";
 cout << "-------------------             |\n";
-cout << "| 4B  | 5R  | 6B  |    tuzin    |\n";
+cout << "| 4B  | 5R  | 6B  |    dozen    |\n";
 cout << "-------------------             |\n";
 cout << "| 7R  | 8B  | 9R  |      1      |\n";
 cout << "-------------------             |\n";
@@ -20,7 +20,7 @@ cout << "| 10B | 11R | 12B |             |\n";
 cout << "---------------------------------\n";
 cout << "| 13R | 14B | 15R |             |\n";
 cout << "-------------------             |\n";
-cout << "| 16B | 17R | 18B |    tuzin    |\n";
+cout << "| 16B | 17R | 18B |    dozen    |\n";
 cout << "-------------------             |\n";
 cout << "| 19R | 20B | 21R |      2      |\n";
 cout << "-------------------             |\n";
@@ -28,7 +28,7 @@ cout << "| 22B | 23R | 24B |             |\n";
 cout << "---------------------------------\n";
 cout << "| 25R | 26B | 27R |             |\n";
 cout << "-------------------             |\n";
-cout << "| 28B | 29R | 30B |    tuzin    |\n";
+cout << "| 28B | 29R | 30B |    dozen    |\n";
 cout << "-------------------             |\n";
 cout << "| 31R | 32B | 33R |      3      |\n";
 cout << "-------------------             |\n";
@@ -44,19 +44,19 @@ cout << "---------------------------------\n";
 
 void bets()
 {
-cout<<"Mozliwe zaklady: "<<endl;
+cout<<"Possible bets: "<<endl;
 cout<<"----------------------------\n";
-cout<<"| jedna liczba | (1) | x36 |\n";
+cout<<"|  one number   | (1) | x36 |\n";
 cout<<"----------------------------\n";
-cout<<"| dwie liczby  | (2) | x18 |\n";
+cout<<"| two numbers   | (2) | x18 |\n";
 cout<<"----------------------------\n";
-cout<<"| trzy liczby  | (3) | x12 |\n";
+cout<<"| three numbers | (3) | x12 |\n";
 cout<<"----------------------------\n";
-cout<<"|     tuzin    | (t) |  x3 |\n";
+cout<<"|     dozen     | (t) |  x3 |\n";
 cout<<"----------------------------\n";
-cout<<"|    kolumna   | (k) |  x3 |\n";
+cout<<"|    column     | (k) |  x3 |\n";
 cout<<"----------------------------\n";
-cout<<"|     kolor    | (c) |  x2 |\n";
+cout<<"|     color     | (c) |  x2 |\n";
 cout<<"----------------------------\n";
 }
 
@@ -83,7 +83,7 @@ void seeyou()
 	system("clear");
 }
 
-int main()
+void ruletka()
 {
 
 //------------------------------------------------------------//
@@ -127,14 +127,14 @@ int main()
 	{
 		system("clear");
 
-		cout<<"Witaj czy chcesz zagrac w ruletke? [y/n]: ";
+		cout<<"Welcome, do you want to play roulette? [y/n]: ";
 		getline(cin, odp);
 		//cout<<"\n";
 		this_thread::sleep_for(chrono::milliseconds(1000));
 
 		if(odp!="y" && odp!="n")
 		{
-			cout<<"Nie ma takiej odpowiedzi"<<endl;
+			cout<<"There is no such answer"<<endl;
 			this_thread::sleep_for(chrono::milliseconds(3000));
 		}
 	}
@@ -147,7 +147,7 @@ int main()
 		{
 			system("clear");
 
-			cout<<"Wpisz swoje saldo poczatkowe: ";
+			cout<<"Enter your starting balance: ";
 			cin>>saldo;
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -156,7 +156,7 @@ int main()
 
 			if(saldo<0 || saldo==0)
 			{
-				cout<<"Saldo nie moze byc mniejsze lub rowne zero"<<endl;
+				cout<<"Balance cannot be less than or equal to zero"<<endl;
 				this_thread::sleep_for(chrono::milliseconds(3000));
 			}
 		}
@@ -254,14 +254,14 @@ int main()
 
 			zasady();
 
-			cout<<"Jakiego typu zaklad chcesz postawic (1/2/3/t/k/c): ";
+			cout<<"What type of bet do you want to place (1/2/3/t/k/c): ";
 			getline(cin, typ);
 			//cout<<"\n";
 			this_thread::sleep_for(chrono::milliseconds(1000));
 
 			if(typ!="1" && typ!="2" && typ!="3" && typ!="t" &&  typ!="k" && typ!="c")
 			{
-                        	cout<<"Nie ma takiej odpowiedzi"<<endl;
+                        	cout<<"There is no such answer"<<endl;
                         	this_thread::sleep_for(chrono::milliseconds(3000));
                         	//system("clear");
 			}
@@ -275,21 +275,18 @@ int main()
 			while(wartosc1!="00" && (x1<0 || x1>36))
 			{
 				x1=-1;
-				cout<<"Wpisz liczbe ktora wybrales (0-36 lub 00): ";
-				getline(cin, wartosc1);
-				//cout<<"\n";
-				if(wartosc1!="00")
-				{
-					x1=stoi(wartosc1);
-				}
-				this_thread::sleep_for(chrono::milliseconds(1000));
+			cout<<"Enter the number you chose (0-36 or 00): ";
+			getline(cin, wartosc1);
+			//cout<<"\n";
+			if(wartosc1!="00")
+			{
+				x1=stoi(wartosc1);
+			}
+			this_thread::sleep_for(chrono::milliseconds(1000));
 
-				if(wartosc1!="00" && (x1<0 || x1>36))
-				{
-                        		cout<<"Nie ma takiej odpowiedzi";
-					cout<<"\n";
-					cout<<"\n";
-                        		this_thread::sleep_for(chrono::milliseconds(3000));
+			if(wartosc1!="00" && (x1<0 || x1>36))
+			{
+                        		cout<<"There is no such answer";
                         		//system("clear");
 				}
 			}
@@ -298,12 +295,12 @@ int main()
 			{
 				system("clear");
 
-				cout<<"Twoje saldo wynosi: "<<saldo;
-				cout<<"\n";
-				cout<<"\n";
-				this_thread::sleep_for(chrono::milliseconds(2000));
+			cout<<"Your balance is: "<<saldo;
+			cout<<"\n";
+			cout<<"\n";
+			this_thread::sleep_for(chrono::milliseconds(2000));
 
-				cout<<"Wpisz sume jaka chcesz postawic: ";
+			cout<<"Enter the amount you want to bet: ";
 				cin>>suma;
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -312,13 +309,13 @@ int main()
 
 				if(suma>saldo)
 				{
-					cout<<"Suma nie moze byc wieksza niz saldo";
+				cout<<"The amount cannot be greater than the balance";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
 				if(suma<0)
 				{
-					cout<<"Suma nie moze byc mniejsza od 0";
+				cout<<"The amount cannot be less than 0";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
@@ -346,7 +343,7 @@ int main()
 			while(wartosc1!="00" && (x1<0 || x1>36))
 			{
 				x1=-1;
-				cout<<"Wpisz pierwsza liczbe ktora wybrales (0-36 lub 00): ";
+				cout<<"Enter the first number you chose (0-36 or 00): ";
 				getline(cin, wartosc1);
 				//cout<<"\n";
 				if(wartosc1!="00")
@@ -357,18 +354,18 @@ int main()
 
 				if(wartosc1!="00" && (x1<0 || x1>36))
 				{
-                        		cout<<"Nie ma takiej odpowiedzi";
+                    cout<<"There is no such answer";
 					cout<<"\n";
 					cout<<"\n";
-                        		this_thread::sleep_for(chrono::milliseconds(3000));
-                        		//system("clear");
+                    this_thread::sleep_for(chrono::milliseconds(3000));
+                    //system("clear");
 				}
 			}
 
 			while(wartosc2!="00" && (x2<0 || x2>36) || wartosc2==wartosc1)
 			{
 				x2=-1;
-				cout<<"Wpisz druga liczbe ktora wybrales (0-36 lub 00): ";
+			cout<<"Enter the second number you chose (0-36 or 00): ";
 				getline(cin, wartosc2);
 				//cout<<"\n";
 				if(wartosc2!="00")
@@ -379,20 +376,20 @@ int main()
 
 				if(wartosc2!="00" && (x2<0 || x2>36))
 				{
-                        		cout<<"Nie ma takiej odpowiedzi";
+                    cout<<"There is no such answer";
 					cout<<"\n";
 					cout<<"\n";
-                        		this_thread::sleep_for(chrono::milliseconds(3000));
-                        		//system("clear");
+                    this_thread::sleep_for(chrono::milliseconds(3000));
+                    //system("clear");
 				}
 
 				if(wartosc2==wartosc1)
 				{
-                        		cout<<"Druga liczba nie moze byc taka sama jak pierwsza";
+                    cout<<"Second number cannot be the same as the first";
 					cout<<"\n";
 					cout<<"\n";
-                        		this_thread::sleep_for(chrono::milliseconds(3000));
-                        		//system("clear");
+                    this_thread::sleep_for(chrono::milliseconds(3000));
+                    //system("clear");
 				}
 			}
 
@@ -400,12 +397,12 @@ int main()
 			{
 				system("clear");
 
-				cout<<"Twoje saldo wynosi: "<<saldo;
-				cout<<"\n";
-				cout<<"\n";
-				this_thread::sleep_for(chrono::milliseconds(2000));
+			cout<<"Your balance is: "<<saldo;
+			cout<<"\n";
+			cout<<"\n";
+			this_thread::sleep_for(chrono::milliseconds(2000));
 
-				cout<<"Wpisz sume jaka chcesz postawic: ";
+			cout<<"Enter the amount you want to bet: ";
 				cin>>suma;
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -414,13 +411,13 @@ int main()
 
 				if(suma>saldo)
 				{
-					cout<<"Suma nie moze byc wieksza niz saldo";
+					cout<<"The amount cannot be greater than the balance";
 						cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
 				if(suma<0)
 				{
-					cout<<"Suma nie moze byc mniejsza od 0";
+					cout<<"The amount cannot be less than 0";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
@@ -448,7 +445,7 @@ int main()
 			while(wartosc1!="00" && (x1<0 || x1>36))
 			{
 				x1=-1;
-				cout<<"Wpisz pierwsza liczbe ktora wybrales (0-36 lub 00): ";
+			cout<<"Enter the first number you chose (0-36 or 00): ";
 				getline(cin, wartosc1);
 				//cout<<"\n";
 				if(wartosc1!="00")
@@ -459,7 +456,7 @@ int main()
 
 				if(wartosc1!="00" && (x1<0 || x1>36))
 				{
-                        		cout<<"Nie ma takiej odpowiedzi";
+                        		cout<<"There is no such answer";
 					cout<<"\n";
 					cout<<"\n";
                         		this_thread::sleep_for(chrono::milliseconds(3000));
@@ -501,7 +498,7 @@ int main()
 			while(wartosc3!="00" && (x3<0 || x3>36) || wartosc3==wartosc1 || wartosc3==wartosc2)
 			{
 				x3=-1;
-				cout<<"Wpisz trzecia liczbe ktora wybrales (0-36 lub 00): ";
+			cout<<"Enter the third number you chose (0-36 or 00): ";
 				getline(cin, wartosc3);
 				//cout<<"\n";
 				if(wartosc3!="00")
@@ -589,14 +586,14 @@ int main()
 		{
 			while(wartosct!="1" && wartosct!="2" && wartosct!="3")
 			{
-				cout<<"Wpisz tuzin ktory wybrales (1/2/3): ";
-				getline(cin, wartosct);
-				//cout<<"\n";
-				this_thread::sleep_for(chrono::milliseconds(1000));
+			cout<<"Enter the dozen you chose (1/2/3): ";
+			getline(cin, wartosct);
+			//cout<<"\n";
+			this_thread::sleep_for(chrono::milliseconds(1000));
 
-				if(wartosct!="1" && wartosct!="2" && wartosct!="3")
-				{
-                        		cout<<"Nie ma takiej odpowiedzi";
+			if(wartosct!="1" && wartosct!="2" && wartosct!="3")
+			{
+                        		cout<<"There is no such answer";
 					cout<<"\n";
 					cout<<"\n";
                         		this_thread::sleep_for(chrono::milliseconds(3000));
@@ -655,14 +652,14 @@ int main()
 		{
 			while(wartosck!="1" && wartosck!="2" && wartosck!="3")
 			{
-				cout<<"Wpisz kolumne ktora wybrales (1/2/3): ";
-				getline(cin, wartosck);
-				//cout<<"\n";
-				this_thread::sleep_for(chrono::milliseconds(1000));
+			cout<<"Enter the column you chose (1/2/3): ";
+			getline(cin, wartosck);
+			//cout<<"\n";
+			this_thread::sleep_for(chrono::milliseconds(1000));
 
-				if(wartosck!="1" && wartosck!="2" && wartosck!="3")
-				{
-                        		cout<<"Nie ma takiej odpowiedzi";
+			if(wartosck!="1" && wartosck!="2" && wartosck!="3")
+			{
+                        		cout<<"There is no such answer";
 					cout<<"\n";
 					cout<<"\n";
                         		this_thread::sleep_for(chrono::milliseconds(3000));
@@ -721,14 +718,14 @@ int main()
 		{
 			while(wartoscc!="czarny" && wartoscc!="czerwony" && wartoscc!="zielony")
 			{
-				cout<<"Wpisz kolor ktory wybrales (czarny/czerwony/zielony): ";
-				getline(cin, wartoscc);
-				//cout<<"\n";
-				this_thread::sleep_for(chrono::milliseconds(1000));
+			cout<<"Enter the color you chose (black/red/green): ";
+			getline(cin, wartoscc);
+			//cout<<"\n";
+			this_thread::sleep_for(chrono::milliseconds(1000));
 
-				if(wartoscc!="czarny" && wartoscc!="czerwony" && wartoscc!="zielony")
-				{
-                        		cout<<"Nie ma takiej odpowiedzi";
+			if(wartoscc!="czarny" && wartoscc!="czerwony" && wartoscc!="zielony")
+			{
+                        		cout<<"There is no such answer";
 					cout<<"\n";
 					cout<<"\n";
                         		this_thread::sleep_for(chrono::milliseconds(3000));
@@ -789,15 +786,15 @@ int main()
 
 //------------------------------------------------------------
 
-		cout<<"Ruletka wylosowala: "<<endl;
+		cout<<"The roulette drew: "<<endl;
 		this_thread::sleep_for(chrono::milliseconds(500));
-		cout<<"Numer: "<<numer<<endl;
+		cout<<"Number: "<<numer<<endl;
 		this_thread::sleep_for(chrono::milliseconds(500));
-		cout<<"Kolor: "<<kolor<<endl;
+		cout<<"Color: "<<kolor<<endl;
 		this_thread::sleep_for(chrono::milliseconds(500));
-		cout<<"Tuzin: "<<tuzin<<endl;
+		cout<<"Dozen: "<<tuzin<<endl;
 		this_thread::sleep_for(chrono::milliseconds(500));
-		cout<<"Kolumna: "<<kolumna<<endl;
+		cout<<"Column: "<<kolumna<<endl;
 		this_thread::sleep_for(chrono::milliseconds(500));
 
 		cout<<"\n";
@@ -807,14 +804,14 @@ int main()
 
 		if(win==1)
 		{
-			cout<<"wygrales! "<<flush;
+			cout<<"You won! "<<flush;
 			//this_thread::sleep_for(chrono::milliseconds(1000));
 
-			//cout<<"gratulacje! "<<flush;
+			//cout<<"Congratulations! "<<flush;
 			cout<<"\n";
 			this_thread::sleep_for(chrono::milliseconds(2000));
 
-			cout<<"twoje saldo wynosi teraz: "<<flush;
+			cout<<"Your balance is now: "<<flush;
 			this_thread::sleep_for(chrono::milliseconds(500));
 			cout<<saldo<<flush;
 
@@ -823,15 +820,15 @@ int main()
 
 		if(win==0)
 		{
-			cout<<"przegrales :( "<<flush;
+			cout<<"You lost :( "<<flush;
 			//this_thread::sleep_for(chrono::milliseconds(1000));
 
-			//cout<<"maybe next time..."<<flush;
+			//cout<<"Maybe next time..."<<flush;
 			cout<<"\n"<<flush;
 			this_thread::sleep_for(chrono::milliseconds(2000));
 
 
-			cout<<"twoje saldo wynosi teraz: "<<flush;
+			cout<<"Your balance is now: "<<flush;
 			this_thread::sleep_for(chrono::milliseconds(500));
 			cout<<saldo<<flush;
 			this_thread::sleep_for(chrono::milliseconds(3000));
@@ -843,7 +840,7 @@ int main()
 		if(saldo==0 || saldo<0)
 		{
 			system("clear");
-			cout<<"BANKRUT"<<endl;
+			cout<<"BANKRUPTCY"<<endl;
 			cout<<"\n";
 
 			getchar();
@@ -859,13 +856,13 @@ int main()
 
 		do{
 			//system("clear")
-			cout<<"Czy chcesz grac dalej? [y/n]: "<<flush;
+			cout<<"Do you want to continue playing? [y/n]: "<<flush;
 			getline(cin, odp);
 			//cout<<"\n";
 
 			if(odp!="y" && odp!="n")
 			{
-				cout<<"Nie ma takiej odpowiedzi"<<endl;
+				cout<<"There is no such answer"<<endl;
 				cout<<"\n";
 				this_thread::sleep_for(chrono::milliseconds(3000));
 			}
@@ -878,4 +875,9 @@ int main()
 
 //------------------------------------------------------------//
 
+}
+
+int main()
+{
+	ruletka();
 }

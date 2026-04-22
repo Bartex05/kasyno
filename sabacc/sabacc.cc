@@ -97,6 +97,7 @@ void dealerAction() {
     }
 
     // 2. Logika dobierania (Koszt 5)
+    
     if (dCredits >= 5 && currentAbs > 7) {
         
         dHand[dSize++] = drawCard();
@@ -119,10 +120,10 @@ int dealerDecideBet() {
     if (score <= 3 && (rand() % 100 < 30)) return 2; 
     
     //Call
-    return 1; // Call
+    return 1;
 }
 
-// --- FAZY GRY ---
+// FAZY GRY
 
 void showStatus(bool finalReveal) {
     
@@ -225,7 +226,7 @@ void playRound() {
     pSize = 0; dSize = 0;
     gamePot = 0; currentBet = 0;
 
-    // --- KOSZTY WEJŚCIOWE ---
+    // KOSZTY WEJŚCIOWE
     
     pCredits -= 15; dCredits -= 15; 
     gamePot += 20; sabaccPot += 10;

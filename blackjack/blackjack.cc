@@ -57,7 +57,7 @@ void writeCards(vector<Card> v){
 
 int Blackjack(int money){
     int bettingMoney;
-    int splitBettingMoney;
+    int splitBettingMoney = bettingMoney;
     cout<<"Current bank amount: "<<money<<endl;
     cout<<"How much are you going to bet? (Note: The lowest denomination is of a white chip worth $1): "<<endl;
     while(money < bettingMoney < 1){
@@ -150,22 +150,41 @@ int Blackjack(int money){
     cout<<"Your cards: "<<endl;             
     writeCards(playerCards);
 
-    while(true){    //  PĘTLA GRY
         //  Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę bo ma natural
     if(playerCards.at(0).getFaceValue() + playerCards.at(1).getFaceValue() == 21){
         cout<<"You got a NATURAL set of cards. You win with 150% bet money.";
         return money + bettingMoney * 1.5;
     }
 
-        //  Logika wyborów gracza
-    if(playerCards.size() == 2){
-        cout<<"Double down (DD), Split (SP), Surrender (SU), ";
-    }
-    cout<<"Hit (H) or Stay (S)? : "<<endl;
-    string playerChoice;
-    while(true){
+
+
+    while(true){        //  PĘTLA GRY
+        if(playerCards.size() == 2){    //  Jeśli gracz ma dwie karty to ma więcej możliwości
+            cout<<"Double down (DD), Split (SP), Surrender (SU), ";
+        }
+        cout<<"Hit (H) or Stay (S)? : "<<endl;
+        string playerChoice = "V";
         cin>>playerChoice;
-        if(playerCards.size() + splitPlayerCards.size() > 2){
+        if(playerChoice == "H"){
+            playerCards.push_back(playingCards.back());
+            playingCards.pop_back();
+            writeCards(playerCards);
+        }else if(playerChoice == "S"){
+            break;
+        }else if(playerCards.size() == 2){
+            if(playerChoice == "SU"){
+                cout<<"You have decided to surrender. You will recieve back half of your betting amount";
+                return money + bettingMoney * 0.5;
+            }else if(playerChoice == "DD"){ //TODO
+
+            }else if(playerChoice == "SP"){ //TODO
+
+            }
+        }
+
+        /*if(playerCards.size() + splitPlayerCards.size() > 2){
+
+            
             if(playerChoice == "H" || playerChoice == "S"){
                 break;
             }
@@ -194,16 +213,25 @@ int Blackjack(int money){
                     break;
                 }
             }else if(playerChoice == "SU"){
-                cout<<"You have decided to surrender. You will recieve back half of your betting amount";
-                return money + bettingMoney * 0.5;
+                
                 break;
             }
-        }
+        }*/
     }
 
-        //  CHOICES
-    if(splitFlag){                          //  SPLIT   ==TODO==
+        //  Logika splita i obsługa wyborów gracza
+    /*if(splitFlag){                          //  SPLIT   ==TODO==
+        bool stayFlag = false;
+        bool splitStayFlag = false;
 
+        cout<<"Your first deck of cards:"<<endl;
+        writeCards(playerCards);
+        cout<<"Do you hit or stay? (H/S): ";
+        while(true){
+            //if(){}
+        }
+        cout<<"Your second deck of cards:"<<endl;
+        writeCards(splitPlayerCards);
     }else{
         if(playerChoice == "H"){            //  HIT
             playerCards.push_back(playingCards.back());
@@ -216,7 +244,7 @@ int Blackjack(int money){
             playingCards.pop_back();
             isPlayerStaying = true;
         }
-    }
+    }*/
 
 
         //  Wypisanie posiadanych kart gracza
@@ -227,15 +255,12 @@ int Blackjack(int money){
         cout<<"Your split hand cards: "<<endl;
         writeCards(splitPlayerCards);
     }
-
-        //  --->    DEALER    <---  == TODO ==
+            //  --->    DEALER    <---  == TODO ==
 
 
         //  Wypisanie posiadanych kart dealera z wypisywaniem ukrytej karty
     cout<<"Dealer's cards: "<<endl;
     writeCards(dealerCards);
-
-    }
 
     return money;
 }

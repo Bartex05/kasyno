@@ -64,6 +64,7 @@ void Ruletka(){
 
 int main()
 {
+<<<<<<< HEAD
     int gameChoice = -1;     //Ta zmienna jak i repeat jest umieszczona tutaj dla efektywnego powtarzania gry
     string gameChoiceRepeat;
     while(true){
@@ -72,11 +73,29 @@ int main()
         cout<<"1. Blackjack"<<endl;         
         cout<<"2. Ruletka"<<endl;           //Do dopisania więcej
 
+=======
+<<<<<<< Updated upstream
+
+=======
+    int gameChoice = -1;     //Ta zmienna jak i repeat jest umieszczona tutaj dla efektywnego powtarzania gry
+    string gameChoiceRepeat;
+    Player player;          //Zabiera z pliku jeśli istnieje a jak nie to tworzy defaultowego gracza TODOOOOOOOO
+    while(true){
+        cout<<"===>        WYBOR GRY        <==="<<endl;
+    
+        cout<<"1. Blackjack"<<endl;         
+        cout<<"2. Ruletka"<<endl;           //Do dopisania więcej
+
+>>>>>>> 55a73f527eed1c1ae6827fee94daa57c90bc6c19
         cout<<"0. Wyjdz"<<endl;
 
         cout<<"Prosze podac numer"<<endl;
 
+<<<<<<< HEAD
         while(true){                        //Podczas dopisywania większej ilości gier tutaj trzeba dodać jej numer w postaci warunku
+=======
+        while(gameChoice < 0){                        //Podczas dopisywania większej ilości gier tutaj trzeba dodać jej numer w postaci warunku
+>>>>>>> 55a73f527eed1c1ae6827fee94daa57c90bc6c19
             if(gameChoice == 0){
                 return 0;
             }
@@ -90,10 +109,18 @@ int main()
 
         switch(gameChoice){
             case 1:                         //Podczas dopisywania większej ilości gier tutaj trzeba dodać jej case w tym samym numerze co w menu tekstowym                          // <----------------------------
+<<<<<<< HEAD
                 Blackjack(5000);
                 cout<<"Do you want to play again? (Y/N): "<<endl;
                     while(true){
                         cin>>gameChoiceRepeat;
+=======
+                int moneyToSend = Blackjack(player.getMoney());
+                player.setMoney(moneyToSend);
+                    cout<<"Do you want to play again? (Y/N): "<<endl;
+                while(true){
+                    cin>>gameChoiceRepeat;
+>>>>>>> 55a73f527eed1c1ae6827fee94daa57c90bc6c19
                     if(gameChoiceRepeat == "Y"){
                         break;
                     }
@@ -113,4 +140,8 @@ int main()
         }
     }
     return 0;
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> 55a73f527eed1c1ae6827fee94daa57c90bc6c19
 }

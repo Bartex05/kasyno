@@ -52,7 +52,7 @@ cout<<"| two numbers   | (2) | x18 |\n";
 cout<<"----------------------------\n";
 cout<<"| three numbers | (3) | x12 |\n";
 cout<<"----------------------------\n";
-cout<<"|     dozen     | (t) |  x3 |\n";
+cout<<"|     dozen     | (d) |  x3 |\n";
 cout<<"----------------------------\n";
 cout<<"|    column     | (k) |  x3 |\n";
 cout<<"----------------------------\n";
@@ -207,15 +207,15 @@ void ruletka()
 		//kolor
 		if((los+2)%2==1 && los!=37)
 		{
-			kolor="czerwony";
+			kolor="red";
 		}
 		if((los+2)%2==0)
 		{
-			kolor="czarny";
+			kolor="black";
 		}
 		if(los==0 || los==37)
 		{
-			kolor="zielony";
+			kolor="green";
 		}
 
 		//tuzin
@@ -248,18 +248,18 @@ void ruletka()
 
 //------------------------------------------------------------
 
-		while(typ!="1" && typ!="2" && typ!="3" && typ!="t" &&  typ!="k" && typ!="c")
+		while(typ!="1" && typ!="2" && typ!="3" && typ!="d" &&  typ!="k" && typ!="c")
 		{
 			system("clear");
 
 			zasady();
 
-			cout<<"What type of bet do you want to place (1/2/3/t/k/c): ";
+			cout<<"What type of bet do you want to place (1/2/3/d/k/c): ";
 			getline(cin, typ);
 			//cout<<"\n";
 			this_thread::sleep_for(chrono::milliseconds(1000));
 
-			if(typ!="1" && typ!="2" && typ!="3" && typ!="t" &&  typ!="k" && typ!="c")
+			if(typ!="1" && typ!="2" && typ!="3" && typ!="d" &&  typ!="k" && typ!="c")
 			{
                         	cout<<"There is no such answer"<<endl;
                         	this_thread::sleep_for(chrono::milliseconds(3000));
@@ -467,7 +467,7 @@ void ruletka()
 			while(wartosc2!="00" && (x2<0 || x2>36) || wartosc2==wartosc1)
 			{
 				x2=-1;
-				cout<<"Wpisz druga liczbe ktora wybrales (0-36 lub 00): ";
+				cout<<"Enter the second number you chose (0-36 or 00): ";
 				getline(cin, wartosc2);
 				//cout<<"\n";
 				if(wartosc2!="00")
@@ -478,7 +478,7 @@ void ruletka()
 
 				if(wartosc2!="00" && (x2<0 || x2>36))
 				{
-                        		cout<<"Nie ma takiej odpowiedzi";
+                        		cout<<"There is no such answer";
 					cout<<"\n";
 					cout<<"\n";
                         		this_thread::sleep_for(chrono::milliseconds(3000));
@@ -487,7 +487,7 @@ void ruletka()
 
 				if(wartosc2==wartosc1)
 				{
-                        		cout<<"Druga liczba nie moze byc taka sama jak pierwsza";
+                        		cout<<"Second number cannot be the same as the first";
 					cout<<"\n";
 					cout<<"\n";
                         		this_thread::sleep_for(chrono::milliseconds(3000));
@@ -509,7 +509,7 @@ void ruletka()
 
 				if(wartosc3!="00" && (x3<0 || x3>36))
 				{
-                        		cout<<"Nie ma takiej odpowiedzi";
+                        		cout<<"There is no such answer";
 					cout<<"\n";
 					cout<<"\n";
                         		this_thread::sleep_for(chrono::milliseconds(3000));
@@ -518,7 +518,7 @@ void ruletka()
 
 				if(wartosc3==wartosc1)
 				{
-                        		cout<<"Trzecia liczba nie moze byc taka sama jak pierwsza";
+                        		cout<<"Third number cannot be the same as the first";
 					cout<<"\n";
 					cout<<"\n";
                         		this_thread::sleep_for(chrono::milliseconds(3000));
@@ -527,7 +527,7 @@ void ruletka()
 
 				if(wartosc3==wartosc2)
 				{
-                        		cout<<"Trzecia liczba nie moze byc taka sama jak druga";
+                        		cout<<"Third number cannot be the same as the second";
 					cout<<"\n";
 					cout<<"\n";
                         		this_thread::sleep_for(chrono::milliseconds(3000));
@@ -539,12 +539,12 @@ void ruletka()
 			{
 				system("clear");
 
-				cout<<"Twoje saldo wynosi: "<<saldo;
+				cout<<"Your balance is: "<<saldo;
 				cout<<"\n";
 				cout<<"\n";
 				this_thread::sleep_for(chrono::milliseconds(2000));
 
-				cout<<"Wpisz sume jaka chcesz postawic: ";
+				cout<<"Enter the amount you want to bet: ";
 				cin>>suma;
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -553,13 +553,13 @@ void ruletka()
 
 				if(suma>saldo)
 				{
-					cout<<"Suma nie moze byc wieksza niz saldo";
+					cout<<"The amount cannot be greater than the balance";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
 				if(suma<0)
 				{
-					cout<<"Suma nie moze byc mniejsza od 0";
+					cout<<"The amount cannot be less than 0";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
@@ -582,7 +582,7 @@ void ruletka()
 
 //-----------------------------------------------------------
 
-		if(typ=="t")
+		if(typ=="d")
 		{
 			while(wartosct!="1" && wartosct!="2" && wartosct!="3")
 			{
@@ -605,12 +605,12 @@ void ruletka()
 			{
 				system("clear");
 
-				cout<<"Twoje saldo wynosi: "<<saldo;
+				cout<<"Your balance is: "<<saldo;
 				cout<<"\n";
 				cout<<"\n";
 				this_thread::sleep_for(chrono::milliseconds(2000));
 
-				cout<<"Wpisz sume jaka chcesz postawic: ";
+				cout<<"Enter the amount you want to bet: ";
 				cin>>suma;
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -619,13 +619,13 @@ void ruletka()
 
 				if(suma>saldo)
 				{
-					cout<<"Suma nie moze byc wieksza niz saldo";
+					cout<<"The amount cannot be greater than the balance";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
 				if(suma<0)
 				{
-					cout<<"Suma nie moze byc mniejsza od 0";
+					cout<<"The amount cannot be less than 0";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
@@ -671,12 +671,12 @@ void ruletka()
 			{
 				system("clear");
 
-				cout<<"Twoje saldo wynosi: "<<saldo;
+				cout<<"Your balance is: "<<saldo;
 				cout<<"\n";
 				cout<<"\n";
 				this_thread::sleep_for(chrono::milliseconds(2000));
 
-				cout<<"Wpisz sume jaka chcesz postawic: ";
+				cout<<"Enter the amount you want to bet: ";
 				cin>>suma;
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -685,13 +685,13 @@ void ruletka()
 
 				if(suma>saldo)
 				{
-					cout<<"Suma nie moze byc wieksza niz saldo";
+					cout<<"The amount cannot be greater than the balance";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
 				if(suma<0)
 				{
-					cout<<"Suma nie moze byc mniejsza od 0";
+					cout<<"The amount cannot be less than 0";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
@@ -716,14 +716,14 @@ void ruletka()
 
 		if(typ=="c")
 		{
-			while(wartoscc!="czarny" && wartoscc!="czerwony" && wartoscc!="zielony")
+			while(wartoscc!="black" && wartoscc!="red" && wartoscc!="green")
 			{
 			cout<<"Enter the color you chose (black/red/green): ";
 			getline(cin, wartoscc);
 			//cout<<"\n";
 			this_thread::sleep_for(chrono::milliseconds(1000));
 
-			if(wartoscc!="czarny" && wartoscc!="czerwony" && wartoscc!="zielony")
+			if(wartoscc!="black" && wartoscc!="red" && wartoscc!="green")
 			{
                         		cout<<"There is no such answer";
 					cout<<"\n";
@@ -737,12 +737,12 @@ void ruletka()
 			{
 				system("clear");
 
-				cout<<"Twoje saldo wynosi: "<<saldo;
+				cout<<"Your balance is: "<<saldo;
 				cout<<"\n";
 				cout<<"\n";
 				this_thread::sleep_for(chrono::milliseconds(2000));
 
-				cout<<"Wpisz sume jaka chcesz postawic: ";
+				cout<<"Enter the amount you want to bet: ";
 				cin>>suma;
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -751,13 +751,13 @@ void ruletka()
 
 				if(suma>saldo)
 				{
-					cout<<"Suma nie moze byc wieksza niz saldo";
+					cout<<"The amount cannot be greater than the balance";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
 				if(suma<0)
 				{
-					cout<<"Suma nie moze byc mniejsza od 0";
+					cout<<"The amount cannot be less than 0";
 					cout<<"\n";
 					this_thread::sleep_for(chrono::milliseconds(3000));
 				}
@@ -766,13 +766,13 @@ void ruletka()
 
 			saldo=saldo-suma;
 
-			if(wartoscc!="zielony" && wartoscc==kolor)
+			if(wartoscc!="green" && wartoscc==kolor)
 			{
 				win=1;
 				suma=suma*2;
 				saldo=saldo+suma;
 			}
-			if(wartoscc=="zielony" && wartoscc==kolor)
+			if(wartoscc=="green" && wartoscc==kolor)
 			{
 				win=1;
 				suma=suma*18;

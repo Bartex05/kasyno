@@ -5,7 +5,7 @@
 
 using namespace std;
 
-        //  Podstawowa klasa karty
+    //  Podstawowa klasa karty z zmienną ukrytej karty dealer-a
 class Card{
     private:
         int faceValue;
@@ -45,6 +45,7 @@ class Card{
         }
 };
 
+    //  Funkcja wypisująca przekazany wektor kart
 void writeCards(vector<Card> v){
     for(auto c : v){
         if(c.getFigureType() == "Number"){
@@ -55,11 +56,13 @@ void writeCards(vector<Card> v){
     }
 }
 
+    //  Główna funkcja zawierająca całką logikę grę
 int Blackjack(int money){
+
     int bettingMoney;
-    int splitBettingMoney = bettingMoney;
+
     cout<<"Current bank amount: "<<money<<endl;
-    cout<<"How much are you going to bet? (Note: The lowest denomination is of a white chip worth $1): "<<endl;
+    cout<<"How much are you going to bet? (Note: The lowest denomination is of a white chip worth $1 so you can't bet non-whole numbers): "<<endl;
     while(money < bettingMoney < 1){
         cin>>bettingMoney;
         if(money < bettingMoney){
@@ -70,6 +73,7 @@ int Blackjack(int money){
         }
         cout<<"How much are you betting?: ";
     }
+
         //  Vectory wszystkich kart, dealera i gracza
     vector<Card> playingCards;
     vector<Card> dealerCards;
@@ -88,7 +92,7 @@ int Blackjack(int money){
         //  Wypełnienie vectora wszystkimi kartami używanymi podczas gry w Blackjack i potasowanie jej
     for(int i = 0; i < 4; i++){
         for(int j = 1; j <= 13; j++){
-            Card playCard(0,"Spades");     //Podstawowa karta jest ostatnią wpisywaną aby zmniejszyć ilość wykonywanych działań
+            Card playCard(0,"Spades");     //   Podstawowa karta jest ostatnią wpisywaną aby zmniejszyć ilość wykonywanych działań
 
             if(i == 0){playCard.setFaceType("Hearts");}
             else if(i == 1){playCard.setFaceType("Diamonds");}
@@ -114,6 +118,8 @@ int Blackjack(int money){
             playingCards.push_back(playCard);
         }
     }
+
+        //  Losowe tasowanie kart
     random_device rd;
     mt19937 g(rd());
     shuffle(playingCards.begin(),playingCards.end(),g);
@@ -129,9 +135,6 @@ int Blackjack(int money){
         playingCards.pop_back();
     }
 
-    bool isPlayerStaying = false;   //  Ta zmienna to flaga służąca do sprawdzania czy gracz skończył dobierać karty aby dealer mógł dobierać swoje i zakończyć nie "NATURALNĄ" grę.
-    bool splitFlag = false;
-
         //  Wypisanie posiadanych kart dealera bez wypisywania ukrytej karty
     cout<<"Dealer's cards: "<<endl;
     for(auto pCard : dealerCards){
@@ -146,40 +149,76 @@ int Blackjack(int money){
         }
     }
 
-        //  Wypisanie posiadanych kart gracza
-    cout<<"Your cards: "<<endl;             
-    writeCards(playerCards);
-
         //  Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę bo ma natural
     if(playerCards.at(0).getFaceValue() + playerCards.at(1).getFaceValue() == 21){
+        cout<<"Your cards: "<<endl;             
+        writeCards(playerCards);
         cout<<"You got a NATURAL set of cards. You win with 150% bet money.";
         return money + bettingMoney * 1.5;
     }
 
-
+    bool splitFlag = false;
 
     while(true){        //  PĘTLA GRY
-        if(playerCards.size() == 2){    //  Jeśli gracz ma dwie karty to ma więcej możliwości
+
+            //  Wypisanie posiadanych kart gracza
+        cout<<"Your cards: "<<endl;             
+        writeCards(playerCards);
+
+            //  Jeśli gracz wybrał split to wypisz też karty z drugiej talii
+        if(splitFlag == true){
+            cout<<"Your split hand cards: "<<endl;
+            writeCards(splitPlayerCards);
+        }
+
+            //  Jeśli gracz ma dwie karty to ma więcej możliwości które mu / jej wypisane
+        if(playerCards.size() == 2){    
             cout<<"Double down (DD), Split (SP), Surrender (SU), ";
         }
-        cout<<"Hit (H) or Stay (S)? : "<<endl;
-        string playerChoice = "V";
+
+            //  Jak nie ma dwóch kart to niezależnie od ilości kart wypisuje te dwie opcje i dobiera odpowiednią resztę tekstu w zależności czy gracz wybrał podzielenie na dwie talie
+        cout<<"Hit (H) or Stay (S)?";
+        if(splitFlag){cout<<" (First Hand)"<<endl;}else{cout<<" : "<<endl;}
+        string playerChoice;
         cin>>playerChoice;
-        if(playerChoice == "H"){
+
+            //  --->    LOGIKA WYBORÓW  <---    //TODOOOOOOOOOOOOOOOOOOOOO
+        if(splitFlag == true){
+
+        }else if(playerChoice == "H"){        //  HIT
             playerCards.push_back(playingCards.back());
             playingCards.pop_back();
             writeCards(playerCards);
-        }else if(playerChoice == "S"){
+        }else if(playerChoice == "S"){      //  STAY
             break;
         }else if(playerCards.size() == 2){
-            if(playerChoice == "SU"){
+            if(playerChoice == "SU"){       //  SURRENDER
                 cout<<"You have decided to surrender. You will recieve back half of your betting amount";
                 return money + bettingMoney * 0.5;
-            }else if(playerChoice == "DD"){ //TODO
-
-            }else if(playerChoice == "SP"){ //TODO
-
+            }else if(playerChoice == "DD"){
+                if(bettingMoney * 2 > money){
+                    cout<<"You don't have enough money to double down"<<endl;
+                }else{
+                    bettingMoney = bettingMoney * 2;
+                    playerCards.push_back(playingCards.back());
+                    playingCards.pop_back();
+                    break;
+                }
+            }else if(playerChoice == "SP"){ //  SPLIT CREATION (Ten wybór zawiera tylko stworzenie drugiej talii. Nie posiada logiki dalszej gry, dlatego pierwsza opcja w logice wyborów sprawdza flagę splitowanej ręki)
+                if(playerCards.at(0).getFigureType() == playerCards.at(1).getFigureType() && playerCards.at(0).getFaceValue() == playerCards.at(1).getFaceValue()){
+                    splitPlayerCards.push_back(playerCards.back());
+                    playerCards.pop_back();
+                    playerCards.push_back(playingCards.back());
+                    playingCards.pop_back();
+                    splitPlayerCards.push_back(playingCards.back());
+                    playingCards.pop_back();
+                    splitFlag = true;
+                }
+            }else{
+                cout<<playerChoice<<" is not a valid choice"<<endl;
             }
+        }else{
+                cout<<playerChoice<<" is not a valid choice"<<endl;
         }
 
         /*if(playerCards.size() + splitPlayerCards.size() > 2){
@@ -196,22 +235,14 @@ int Blackjack(int money){
                     if(bettingMoney * 2 > money){
                         cout<<"You don't have enough money to split"<<endl;
                     }else{
-                        splitPlayerCards.push_back(playerCards.back());
-                        playerCards.pop_back();
-                        playerCards.push_back(playingCards.back()); playingCards.pop_back();
-                        splitPlayerCards.push_back(playingCards.back()); playingCards.pop_back();
-                        splitFlag = true;
+                        
                         break;
                     }
                 }else{
                     cout<<"Can't split the hand because the two cards in it are not the same face and value"<<endl;
                 }
             }else if(playerChoice == "DD"){
-                if(bettingMoney * 2 > money){
-                    cout<<"You don't have enough money to double down"<<endl;
-                }else{
-                    break;
-                }
+                
             }else if(playerChoice == "SU"){
                 
                 break;
@@ -239,9 +270,7 @@ int Blackjack(int money){
         }else if(playerChoice == "S"){      //  STAY
             isPlayerStaying = true;
         }else if(playerChoice == "DD"){     //  DOUBLE DOWN
-            bettingMoney = bettingMoney * 2;
-            playerCards.push_back(playingCards.back());
-            playingCards.pop_back();
+            
             isPlayerStaying = true;
         }
     }*/

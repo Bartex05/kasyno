@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -56,6 +57,24 @@ void writeCards(vector<Card> v){
     }
 }
 
+    //  Funkcja sprawdzająca aktualną wratość wszystkich kart i przekazywaniu czy ich łączna wartość przebija 21 (wliczając logikę miekkich asów) (ta funkcja zwraca liczbę zamiast przekazywać wartość ze względu na logikę dealera)
+int handValue(vector<Card> v){
+    int valueCounter = 0, aceAmount = 0;
+    for(auto c: v){
+        valueCounter += c.getFaceValue();
+        if(c.getFigureType() == "Ace"){
+            aceAmount++;
+        }
+    }
+    if(aceAmount > 0){
+        while(valueCounter > 21){
+            valueCounter -= 10;
+            aceAmount--;
+        }
+    }
+    return valueCounter;
+}
+
     //  Główna funkcja zawierająca całką logikę grę
 int Blackjack(int money){
 
@@ -82,7 +101,7 @@ int Blackjack(int money){
 
     cout<<"You have chosen Blackjack"<<endl;
     cout<<"At this casino there are no Hole Cards and the Dealer doesn't check the face-down card until all player actions are complete"<<endl;
-    cout<<"Are you going to approach the table where the dealer Hits or the table where he Stays at soft 17? (H/S): ";     //Wybór miękkiej 17
+    cout<<"Are you going to approach the table where the dealer Hits soft 17 or the table where he Stays at soft 17? (H/S): ";     //   Wybór miękkiej 17
     string soft17;
     while(true){
         cin>>soft17;
@@ -159,16 +178,47 @@ int Blackjack(int money){
 
     bool splitFlag = false;
 
-    while(true){        //  PĘTLA GRY
+        //  Ta zmienna istnieje po to aby wiedzieć kiedy gracz postanowił "STAY" na obu taliach 0 - brak wyboru lub "HIT" na obu, 1 - "STAY" lub "BUST" na pierwszej talii, 2 - "STAY" lub "BUST" na drugiej talii
+    int splitStay = 0;
 
-            //  Wypisanie posiadanych kart gracza
-        cout<<"Your cards: "<<endl;             
+    while(true){        //  ---> PĘTLA GRY <---
+
+            //  Wypisanie posiadanych kart gracza i sprawdzenie czy nie przebił 21
+        if(splitFlag == false){
+            cout<<"Your cards: "<<endl;
+        }else{
+            cout<<"Your first hand cards: "<<endl;
+        }
         writeCards(playerCards);
 
-            //  Jeśli gracz wybrał split to wypisz też karty z drugiej talii
+            //  Logika wykorzystująca handValue do sprawdzenia czy gracz przegrał
+        if(handValue(playerCards) > 21){
+                //  Gdy nie ma się dzielonych kart i się przebiło 21 to się z automatu przegrywa ale reszta kodu poza pętlą gry wciąż się odbywa aby gracz mógł zobaczyć karty dealera
+            if(splitFlag == false){
+                cout<<"You bust"<<endl;
+                break;
+            }else{
+                //  Ale jeśli ma dzielone karty "SPLIT" to druga talia może być wciąż wygrana jeśli druga co obsługuje ten if oraz pierwsza funkcja po wyjściu z pętli gry
+                cout<<"First hand bust!"<<endl;
+                if(splitStay == 2){
+                    break;
+                }
+                splitStay = 1;
+            }
+        }
+
+            //  Jeśli gracz wybrał split to wypisz też karty z drugiej talii i sprawdź czy nie przebił 21 (aplikują się te same zasady co w funkcji powyżej dla pierwszej ale nie jedynej talii)
         if(splitFlag == true){
-            cout<<"Your split hand cards: "<<endl;
+            cout<<"Your second hand cards: "<<endl;
             writeCards(splitPlayerCards);
+            
+            if(handValue(splitPlayerCards) > 21){
+                cout<<"Second hand bust!"<<endl;
+                if(splitStay == 1){
+                    break;
+                }
+                splitStay = 2;
+            }
         }
 
             //  Jeśli gracz ma dwie karty to ma więcej możliwości które mu / jej wypisane
@@ -176,15 +226,70 @@ int Blackjack(int money){
             cout<<"Double down (DD), Split (SP), Surrender (SU), ";
         }
 
-            //  Jak nie ma dwóch kart to niezależnie od ilości kart wypisuje te dwie opcje i dobiera odpowiednią resztę tekstu w zależności czy gracz wybrał podzielenie na dwie talie
-        cout<<"Hit (H) or Stay (S)?";
-        if(splitFlag){cout<<" (First Hand)"<<endl;}else{cout<<" : "<<endl;}
-        string playerChoice;
-        cin>>playerChoice;
+        string playerChoice, splitPlayerChoice;
 
-            //  --->    LOGIKA WYBORÓW  <---    //TODOOOOOOOOOOOOOOOOOOOOO
-        if(splitFlag == true){
+            //  Jak nie ma dwóch kart to niezależnie od ilości kart wypisuje te dwie opcje
+        cout<<"Hit (H) or Stay (S)? : "<<endl;
+        if(splitStay != 1 && splitFlag == true){
+            cout<<"(First hand): ";
+            while(true){
+                cin>>playerChoice;
+                if(playerChoice == "H"){    //  Z jakiegoś powodu którego nie potrafię rozgarnąć gdy zmienna ze stringiem jest zapisana w postaci playerChoice == "H" || playerChoice == "S" to ta funkcja nie działa więc rozpisuję ją w ten sposób
+                    break;
+                }else if(playerChoice == "S"){
+                    break;
+                }else{
+                    cout<<playerChoice<<" is not a valid choice"<<endl;
+                }
+            }
+        }
+            //  "HIT" i "STAY" dla drugiej talii kart
+        if(splitStay != 2 && splitFlag == true){
+            cout<<"(Second hand): ";
+            cin>>splitPlayerChoice;
+            while(true){
+                cin>>splitPlayerChoice;
+                if(splitPlayerChoice == "H"){   //  Ten sam problem aplikuje się tutaj
+                    break;
+                }else if(splitPlayerChoice == "S"){
+                    break;
+                }else{
+                    cout<<splitPlayerChoice<<" is not a valid choice"<<endl;
+                }
+            }
+        }
 
+            //  Jak talia jest "SPLIT" to ten playerChoice jest nieaktywny
+        if(splitFlag == false){
+            cin>>playerChoice;
+        }
+
+            //  --->    LOGIKA WYBORÓW  <---
+        if(splitFlag == true){  //  SPLIT LOGIC
+            if(splitStay != 1){
+                if(playerChoice == "H"){
+                    playerCards.push_back(playingCards.back());
+                    playingCards.pop_back();
+                }else if(playerChoice == "S"){
+                    if(splitStay == 2){
+                        break;
+                    }else{
+                        splitStay = 1;
+                    }
+                }
+            }
+            if(splitStay != 2){
+                if(splitPlayerChoice == "H"){
+                    splitPlayerCards.push_back(playingCards.back());
+                    playingCards.pop_back();
+                }else if(splitPlayerChoice == "S"){
+                    if(splitStay == 1){
+                        break;
+                    }else{
+                        splitStay = 2;
+                    }
+                }
+            }
         }else if(playerChoice == "H"){        //  HIT
             playerCards.push_back(playingCards.back());
             playingCards.pop_back();
@@ -220,70 +325,9 @@ int Blackjack(int money){
         }else{
                 cout<<playerChoice<<" is not a valid choice"<<endl;
         }
-
-        /*if(playerCards.size() + splitPlayerCards.size() > 2){
-
-            
-            if(playerChoice == "H" || playerChoice == "S"){
-                break;
-            }
-        }else{
-            if(playerChoice == "H" || playerChoice == "S"){
-                break;
-            }else if(playerChoice == "SP"){
-                if(playerCards.at(0).getFigureType() == playerCards.at(1).getFigureType() && playerCards.at(0).getFaceValue() == playerCards.at(1).getFaceValue()){
-                    if(bettingMoney * 2 > money){
-                        cout<<"You don't have enough money to split"<<endl;
-                    }else{
-                        
-                        break;
-                    }
-                }else{
-                    cout<<"Can't split the hand because the two cards in it are not the same face and value"<<endl;
-                }
-            }else if(playerChoice == "DD"){
-                
-            }else if(playerChoice == "SU"){
-                
-                break;
-            }
-        }*/
     }
+        //  TODO -> Logika bustowania splita
 
-        //  Logika splita i obsługa wyborów gracza
-    /*if(splitFlag){                          //  SPLIT   ==TODO==
-        bool stayFlag = false;
-        bool splitStayFlag = false;
-
-        cout<<"Your first deck of cards:"<<endl;
-        writeCards(playerCards);
-        cout<<"Do you hit or stay? (H/S): ";
-        while(true){
-            //if(){}
-        }
-        cout<<"Your second deck of cards:"<<endl;
-        writeCards(splitPlayerCards);
-    }else{
-        if(playerChoice == "H"){            //  HIT
-            playerCards.push_back(playingCards.back());
-            playingCards.pop_back();
-        }else if(playerChoice == "S"){      //  STAY
-            isPlayerStaying = true;
-        }else if(playerChoice == "DD"){     //  DOUBLE DOWN
-            
-            isPlayerStaying = true;
-        }
-    }*/
-
-
-        //  Wypisanie posiadanych kart gracza
-    cout<<"Your cards: "<<endl;             
-    writeCards(playerCards);
-        //  Jeśli gracz wybrał split to wypisz też karty z drugiej talii
-    if(splitPlayerCards.size() != 0){
-        cout<<"Your split hand cards: "<<endl;
-        writeCards(splitPlayerCards);
-    }
             //  --->    DEALER    <---  == TODO ==
 
 

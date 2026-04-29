@@ -75,29 +75,38 @@ int handValue(vector<Card> v){
     //  Główna funkcja zawierająca całką logikę grę
 int Blackjack(int money){
 
-    int bettingMoney;
+    cout<<"You have chosen Blackjack"<<endl;
+    cout<<"At this casino there are no Hole Cards and the Dealer doesn't check the face-down card until all player actions are complete"<<endl;
+
+    int bettingMoney = 0;
 
     cout<<"Current bank amount: "<<money<<endl;
-    cout<<"(Note: The lowest denomination is of a white chip worth $1 so you can't bet non-whole numbers): "<<endl;
-    while(money < bettingMoney && bettingMoney < 1){
+    cout<<"(Note: The lowest denomination is of a white chip worth $1 so non whole numbers are not allowed and will be rounded down): "<<endl;
+    cout<<"How much are you betting?: ";
+    while(money < bettingMoney || bettingMoney < 1){
+        while(!(cin>>bettingMoney)){
+            cout<<"Invalid number"<<endl;
+            cin.clear();
+            cin.ignore(numeric_limits<int>::max(),'\n'); 
+        }
         cout<<"How much are you betting?: ";
-        cin>>bettingMoney;
+        bettingMoney = floor(bettingMoney);
         if(money < bettingMoney){
             cout<<"You can't bet the money you don't have"<<endl;
         }
         if(bettingMoney < 1){
-            cout<<"You can't bet negative or zero amount of money"<<endl;
+             cout<<"You can't bet negative or zero amount of money"<<endl;
         }
     }
+    //s
 
+    cout<<bettingMoney;
         //  Vectory wszystkich kart, dealera i gracza
     vector<Card> playingCards;
     vector<Card> dealerCards;
     vector<Card> playerCards;
     vector<Card> splitPlayerCards;
 
-    cout<<"You have chosen Blackjack"<<endl;
-    cout<<"At this casino there are no Hole Cards and the Dealer doesn't check the face-down card until all player actions are complete"<<endl;
     cout<<"Are you going to approach the table where the dealer Hits soft 17 or the table where he Stays at soft 17? (H/S): ";     //   Wybór miękkiej 17
     string soft17;
     while(true){
@@ -396,7 +405,7 @@ int Blackjack(int money){
     return money;
 }
 
-int main(int argc, char const *argv[])
+int main()
 {
     Blackjack(5000);
     return 0;

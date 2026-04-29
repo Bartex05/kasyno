@@ -78,8 +78,9 @@ int Blackjack(int money){
     int bettingMoney;
 
     cout<<"Current bank amount: "<<money<<endl;
-    cout<<"How much are you going to bet? (Note: The lowest denomination is of a white chip worth $1 so you can't bet non-whole numbers): "<<endl;
-    while(money < bettingMoney < 1){
+    cout<<"(Note: The lowest denomination is of a white chip worth $1 so you can't bet non-whole numbers): "<<endl;
+    while(money < bettingMoney && bettingMoney < 1){
+        cout<<"How much are you betting?: ";
         cin>>bettingMoney;
         if(money < bettingMoney){
             cout<<"You can't bet the money you don't have"<<endl;
@@ -87,7 +88,6 @@ int Blackjack(int money){
         if(bettingMoney < 1){
             cout<<"You can't bet negative or zero amount of money"<<endl;
         }
-        cout<<"How much are you betting?: ";
     }
 
         //  Vectory wszystkich kart, dealera i gracza
@@ -166,11 +166,18 @@ int Blackjack(int money){
     }
 
         //  Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę bo ma natural
-    if(playerCards.at(0).getFaceValue() + playerCards.at(1).getFaceValue() == 21){
+    if(handValue(playerCards) == 21){
         cout<<"Your cards: "<<endl;             
         writeCards(playerCards);
-        cout<<"You got a NATURAL set of cards. You win with 150% bet money.";
-        return money + bettingMoney * 1.5;
+        if(handValue(dealerCards) == 21){
+            cout<<"Dealer cards: "<<endl;             
+            writeCards(dealerCards);
+            cout<<"Both you and the dealer have a natural hand. Your bet is returned"<<endl;
+            return money;
+        }else{
+            cout<<"You got a NATURAL set of cards. You win with 150% bet money.";
+            return money + bettingMoney * 1.5;
+        }
     }
 
     bool splitFlag = false;
@@ -328,7 +335,11 @@ int Blackjack(int money){
                 cout<<playerChoice<<" is not a valid choice"<<endl;
         }
     }
-        //  --->    DEALER    <---
+            //  --->    DEALER    <---
+        //  Zmienna do późniejszego przekazania wyniku gry dla gracza
+    bool dealerBust = false;
+
+        //  Cała logika dealera zgodnie z zasadami Amerykańskiego blackjacka
     if(soft17 == "H"){
         while(handValue(dealerCards) <= 17){
             if(handValue(dealerCards) != 17){
@@ -353,11 +364,34 @@ int Blackjack(int money){
             dealerCards.push_back(playingCards.back());
             playingCards.pop_back();
         }
+
+    }
+
+        //  Ostateczne sprawdzanie czy dealer przebił 21
+    if(handValue(dealerCards) > 21){
+        dealerBust = true;
     }
 
         //  Wypisanie posiadanych kart dealera z wypisywaniem ukrytej karty
     cout<<"Dealer's cards: "<<endl;
     writeCards(dealerCards);
+
+    if(bust == true && dealerBust == true){
+        cout<<"Both you and the dealer bust however house rules state that in this situation player loses their bet."<<endl;
+        return money - bettingMoney;
+    }else if(bust == true){
+        cout<<"You bust and lost your bet."<<endl;
+        return money - bettingMoney;
+    }else if(bust == false && dealerBust == true){
+        cout<<"Dealer bust and you didn't. You win."<<endl;
+        return money + bettingMoney;
+    }else if(bust == false && handValue(dealerCards) > handValue(playerCards)){
+        cout<<"Dealer has a better hand than you. You lost your bet."<<endl;
+        return money - bettingMoney;
+    }else if(bust == false && handValue(dealerCards) < handValue(playerCards)){
+        cout<<"You have a better hand than dealer. You won."<<endl;
+        return money + bettingMoney;
+    }
 
     return money;
 }

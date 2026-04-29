@@ -57,7 +57,7 @@ void writeCards(vector<Card> v){
     }
 }
 
-    //  Funkcja sprawdzająca aktualną wratość wszystkich kart i przekazywaniu czy ich łączna wartość przebija 21 (wliczając logikę miekkich asów) (ta funkcja zwraca liczbę zamiast przekazywać wartość ze względu na logikę dealera)
+    //  Funkcja sprawdzająca aktualną wratość wszystkich kart i przekazywaniu czy ich łączna wartość przebija 21 (wliczając logikę miekkich asów)
 int handValue(vector<Card> v){
     int valueCounter = 0, aceAmount = 0;
     for(auto c: v){
@@ -66,11 +66,8 @@ int handValue(vector<Card> v){
             aceAmount++;
         }
     }
-    if(aceAmount > 0){
-        while(valueCounter > 21){
-            valueCounter -= 10;
-            aceAmount--;
-        }
+    if(aceAmount > 0 && valueCounter + 10 <= 21){
+        valueCounter += 10;
     }
     return valueCounter;
 }
@@ -127,7 +124,7 @@ int Blackjack(int money){
                     playCard.setFigureType("King");
                 }
             }else if(j == 1){
-                playCard.setFaceValue(11);
+                playCard.setFaceValue(1);
                 playCard.setFigureType("Ace");
             }else{
                 playCard.setFaceValue(j);
@@ -181,6 +178,8 @@ int Blackjack(int money){
         //  Ta zmienna istnieje po to aby wiedzieć kiedy gracz postanowił "STAY" na obu taliach 0 - brak wyboru lub "HIT" na obu, 1 - "STAY" lub "BUST" na pierwszej talii, 2 - "STAY" lub "BUST" na drugiej talii
     int splitStay = 0;
 
+    bool bust = false;
+
     while(true){        //  ---> PĘTLA GRY <---
 
             //  Wypisanie posiadanych kart gracza i sprawdzenie czy nie przebił 21
@@ -196,11 +195,13 @@ int Blackjack(int money){
                 //  Gdy nie ma się dzielonych kart i się przebiło 21 to się z automatu przegrywa ale reszta kodu poza pętlą gry wciąż się odbywa aby gracz mógł zobaczyć karty dealera
             if(splitFlag == false){
                 cout<<"You bust"<<endl;
+                bust = true;
                 break;
             }else{
                 //  Ale jeśli ma dzielone karty "SPLIT" to druga talia może być wciąż wygrana jeśli druga co obsługuje ten if oraz pierwsza funkcja po wyjściu z pętli gry
                 cout<<"First hand bust!"<<endl;
                 if(splitStay == 2){
+                    bust = true;
                     break;
                 }
                 splitStay = 1;
@@ -215,6 +216,7 @@ int Blackjack(int money){
             if(handValue(splitPlayerCards) > 21){
                 cout<<"Second hand bust!"<<endl;
                 if(splitStay == 1){
+                    bust = true;
                     break;
                 }
                 splitStay = 2;
@@ -326,10 +328,32 @@ int Blackjack(int money){
                 cout<<playerChoice<<" is not a valid choice"<<endl;
         }
     }
-        //  TODO -> Logika bustowania splita
-
-            //  --->    DEALER    <---  == TODO ==
-
+        //  --->    DEALER    <---
+    if(soft17 == "H"){
+        while(handValue(dealerCards) <= 17){
+            if(handValue(dealerCards) != 17){
+                dealerCards.push_back(playingCards.back());
+                playingCards.pop_back();
+            }else{
+                int valueCounter = 0, aceAmount = 0;
+                for(auto i : dealerCards){
+                    valueCounter += i.getFaceValue();
+                    if(i.getFigureType() == "Ace"){
+                        aceAmount++;
+                    }
+                }
+                if(aceAmount > 0 && valueCounter + 10 == 17){
+                    dealerCards.push_back(playingCards.back());
+                    playingCards.pop_back();
+                }
+            }
+        }
+    }else if(soft17 == "S"){
+        while(handValue(dealerCards) < 17){
+            dealerCards.push_back(playingCards.back());
+            playingCards.pop_back();
+        }
+    }
 
         //  Wypisanie posiadanych kart dealera z wypisywaniem ukrytej karty
     cout<<"Dealer's cards: "<<endl;

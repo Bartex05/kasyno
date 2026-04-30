@@ -1,4 +1,5 @@
 .vscode
 .vs
+CppProperties.json
 *.out
 *.exe

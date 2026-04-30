@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -84,7 +83,7 @@ int Blackjack(int money){
     cout<<"(Note: The lowest denomination is of a white chip worth $1 so non whole numbers are not allowed and will be rounded down): "<<endl;
     cout<<"How much are you betting?: ";
     while(money < bettingMoney || bettingMoney < 1){
-        while(!(cin>>bettingMoney)){
+        while(!(cin>>bettingMoney)){    //  Istnieje to aby wartości decymalne i nie numeryczne były odrzucane
             cout<<"Invalid number"<<endl;
             cin.clear();
             cin.ignore(numeric_limits<int>::max(),'\n'); 

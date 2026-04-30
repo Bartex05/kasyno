@@ -3,3 +3,9 @@
 CppProperties.json
 *.out
 *.exe
+*.sln
+*.vcxproj
+*.filters
+*.user
+/kasyno/x64/Debug
+/x64/Debug

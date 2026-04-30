@@ -43,10 +43,6 @@ class Player{
         int loadPlayer();
 };
 
-int Player::addPlayer(string nickname){
-    
-}
-
 int main(int argc, char const *argv[])
 {
 

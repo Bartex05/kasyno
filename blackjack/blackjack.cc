@@ -117,8 +117,6 @@ int Blackjack(int money) {
 		}
 	}
 
-	cout << "soft17: " << soft17 << endl;
-
 	//  Wypełnienie vectora wszystkimi kartami używanymi podczas gry w Blackjack i potasowanie jej
 	for (int i = 0; i < 4; i++) {
 		for (int j = 1; j <= 13; j++) {
@@ -210,7 +208,7 @@ int Blackjack(int money) {
 
 	while (true) {        //  ---> PĘTLA GRY <---
 
-		//  Wypisanie posiadanych kart gracza i sprawdzenie czy nie przebił 21
+		//  Wypisanie posiadanych kart gracza
 		if (splitFlag == false) {
 			cout << "Your cards: " << endl;
 		}
@@ -223,7 +221,6 @@ int Blackjack(int money) {
 		if (handValue(playerCards) > 21) {
 			//  Gdy nie ma się dzielonych kart i się przebiło 21 to się z automatu przegrywa ale reszta kodu poza pętlą gry wciąż się odbywa aby gracz mógł zobaczyć karty dealera
 			if (splitFlag == false) {
-				cout << "You bust" << endl;
 				bust = true;
 				break;
 			}
@@ -414,8 +411,13 @@ int Blackjack(int money) {
 	}
 
 	//  Wypisanie posiadanych kart dealera z wypisywaniem ukrytej karty
-	cout << "Dealer's cards: " << endl;
+	cout << endl << "Dealer's cards: " << endl;
 	writeCards(dealerCards);
+
+	cout << endl << "Your hand: " << endl;
+	writeCards(playerCards);
+
+	cout << endl;
 
 	if (bust == true && dealerBust == true) {
 		cout << "Both you and the dealer bust however house rules state that in this situation player loses their bet." << endl;

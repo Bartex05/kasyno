@@ -2,30 +2,25 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <filesystem>
 
 using namespace std;
 
         //  Obiekty tej klasy będą wykorzystywane do zapisywania pieniędzy wygranych lub przegranych NA KOŃCU danej gry/stołu po czym będzie wpisywany do pliku players.txt
 class Player{
     private:
-        int id;
         int money;                                   
         string nickname;
     public:
         Player(){                                           //  Defaults
-            this->id = 0;
             this->nickname = "placeholder";
             this->money = 5000;                             //  Startowa ilość kasy do ustalenia
         };
         Player(int id, string nickname, int money){         //  Konstruktor przy tworzeniu obiektu currentPlayer za pomocą danych z pliku players.txt
-            this->id = id;
             this->nickname = nickname;
             this->money = money;
         }
 
-        void setId(int id){                                 //  Zapisywanie i pobieranie wartości
-            this->id = id;
-        }
         void setNickname(string nickname){
             this->nickname = nickname;
         }
@@ -38,12 +33,46 @@ class Player{
         int getMoney(){                                 
             return this->money;
         }
-        
-        int addPlayer(string);
-        int loadPlayer();
 };
+
+//  Funkcja sprawdzani istnienia gracza
+bool fileExists(string playerName) {
+    ifstream infile(playerName + ".txt");
+    return infile.good();
+}
+
+bool isNumber(string str) {
+    for (char c : str) {
+        if (isdigit(c) == 0) return false;
+    }
+    return true;
+}
+
+//  Funkcja do tworzenia pliku nowego gracza
+void createPlayer(string playerName, int money){
+    if (!fileExists(playerName)) {
+        ofstream file(playerName + ".txt", ios::out);
+        cout << "Please set a password: ";
+        string x;
+        cin >> x;
+        file << x;
+        cout << "How much money do you want to start with?: ";
+        while (true) {
+            if()
+        }
+        cin >> x;
+        file << x;
+        file.close();
+    }
+}
+
+//  Funkcja do pobierania danych gracza z pliku o nazwie gracza i tworzenia obiektu currentPlayer
+Player getCurrentPlayer(string playerName){
+    fstream file(playerName + ".txt", ios::in, ios::out);
+}
 
 int main(int argc, char const *argv[])
 {
+
     return 0;
 }

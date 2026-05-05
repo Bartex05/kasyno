@@ -1367,6 +1367,7 @@ int main()
 {
 	//	Ta zmienna jest umieszczona w tym nadrzędnym zakresie dla efektywnego powtarzania gry
     int gameChoice = -1;
+	int bankspermy = 5000;
 
 	//  Ten gracz jest jeszcze do zmiany dlatego że będzie to w przyszłości tworzone z pliku wprowadzanego do vectora wszystkich istniejących gracze			<--- TODO
     Player player;
@@ -1419,7 +1420,8 @@ int main()
 					}
 				}
             case 2:
-                Ruletka();
+                bankspermy=ruletka(bankspermy);
+				cout<<bankspermy;
 				gameChoice = -1;
                 break;
             default:                        //Ze względu na zabezpieczony brak nieodpowiedniego case, default jest używany do powtarzania gry poprzez niezmianianą zmienną 'gameChoice' lub wprost niepoprawnie wprowadzoną wartość.

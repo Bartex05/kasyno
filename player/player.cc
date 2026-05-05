@@ -58,17 +58,25 @@ void createPlayer(string playerName, int money){
         file << x;
         cout << "How much money do you want to start with?: ";
         while (true) {
-            if()
+            cin >> x;
+            if (isNumber) {
+                file << x;
+            }
+            else {
+                cout << x << " is not a number. Enter amount: ";
+            }
         }
-        cin >> x;
-        file << x;
         file.close();
     }
 }
 
-//  Funkcja do pobierania danych gracza z pliku o nazwie gracza i tworzenia obiektu currentPlayer
+//  Funkcja do pobierania danych gracza z pliku o nazwie gracza i przekazywania danych do currentPlayer
 Player getCurrentPlayer(string playerName){
-    fstream file(playerName + ".txt", ios::in, ios::out);
+    ifstream file(playerName + ".txt", ios::in);
+
+
+
+    file.close();
 }
 
 int main(int argc, char const *argv[])

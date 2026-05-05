@@ -623,7 +623,7 @@ int ruletka(int saldo)
 
 //------------------------------------------------------------
 
-	if(odp=="y")
+	/*if(odp=="y")
 	{
 		while(saldo==0 || saldo<0)
 		{
@@ -642,7 +642,7 @@ int ruletka(int saldo)
 				this_thread::sleep_for(chrono::milliseconds(3000));
 			}
 		}
-	}
+	} */
 
 //------------------------------------------------------------
 
@@ -1420,6 +1420,7 @@ int main()
 				}
             case 2:
                 Ruletka();
+				gameChoice = -1;
                 break;
             default:                        //Ze względu na zabezpieczony brak nieodpowiedniego case, default jest używany do powtarzania gry poprzez niezmianianą zmienną 'gameChoice' lub wprost niepoprawnie wprowadzoną wartość.
                 cout<<"No game has been chosen or the input is invalid."<<endl;

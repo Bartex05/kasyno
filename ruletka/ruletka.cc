@@ -83,16 +83,15 @@ void seeyou()
 	system("clear");
 }
 
-void ruletka()
+int ruletka(int saldo)
 {
-
 //------------------------------------------------------------//
 
 	//odp tak/nie
 	string odp;
 
 	//pieniadze
-	int saldo=0;
+	//int saldo=0;
 	int suma=0;
 	int mnoznik;
 
@@ -875,9 +874,11 @@ void ruletka()
 
 //------------------------------------------------------------//
 
+	return saldo;
+
 }
 
 int main()
 {
-	ruletka();
+	
 }

@@ -57,6 +57,64 @@ string getCardName(int v) {
     return "Red " + to_string(v);
 }
 
+void printCard(int hand[], int size, bool hide) {
+    
+    string lines[5] = {"", "", "", "", ""};
+
+    for (int i = 0; i < size; i++) {
+        
+        int valueInt = hand[i];
+        
+        string symbol;
+        string valueString;
+
+        // Symbol
+        if (valueInt == 0) {
+            
+            symbol = "S";
+        }
+        else if (valueInt > 0) { 
+            
+            symbol = "G";
+        }
+        else {
+            
+            symbol = "R";
+        }
+
+        if (hide) {
+            
+            valueString = "?";
+            symbol = "?";
+        } 
+        else {
+            
+            valueString = to_string(myAbs(valueInt));
+        }
+
+        // Padding
+        string valueLeft = valueString;
+        string valueRight = valueString;
+        
+        if (valueString.length() == 1) {
+            
+            valueLeft = valueString + " "; // Np. "5 "
+            valueRight = " " + valueString; // Np. " 5"
+        }
+
+        lines[0] += "┌─────┐ ";
+        lines[1] += "│" + valueLeft + "   │ ";
+        lines[2] += "│  " + symbol + "  │ ";
+        lines[3] += "│   " + valueRight + "│ ";
+        lines[4] += "└─────┘ ";
+    }
+
+    for (int i = 0; i < 5; i++) {
+        
+        cout << lines[i] << endl;
+    }
+}
+
 // LOGIKA DEALERA
 
 void dealerAction() {
@@ -131,26 +189,26 @@ void showStatus(bool finalReveal) {
     cout << " MONEY: $" << pCredits << " | TABLE POT: $" << gamePot << " | SABACC POT: $" << sabaccPot << endl;
     cout << "-----------------------------------------------------------" << endl;
     
-    cout << "Your hand: ";
+    cout << "YOUR HAND:" << endl;
     
-    for (int i = 0; i < pSize; i++) cout << "[" << getCardName(pHand[i]) << "] ";
-    
-    
+    printCard(pHand, pSize, false); 
 
     if (finalReveal) {
-        
-        cout << " (Score: " << calculateScore(pHand, pSize) << ")" << endl;
 
-        cout << "Dealer's hand: ";
-        
-        for (int i = 0; i < dSize; i++) cout << "[" << getCardName(dHand[i]) << "] ";
-        
-        cout << " (Score: " << calculateScore(dHand, dSize) << ")" << endl;
-    } 
-    else {
-        
-        cout << endl << "Number of Dealer's cards:  " << dSize << "." << endl;
+        cout << "Score: " << calculateScore(pHand, pSize) << endl;
     }
+    
+    cout << "-----------------------------------------------------------" << endl;
+    
+    cout << "DEALER'S HAND:" << endl;
+    
+    printCard(dHand, dSize, !finalReveal);
+
+    if (finalReveal) {
+
+        cout << "Score: " << calculateScore(dHand, dSize) << endl;
+    }
+    
     cout << "-----------------------------------------------------------" << endl;
 }
 
@@ -158,7 +216,7 @@ bool handleBetting() {
     
     cout << endl << "--- LICITATION ---" << endl;
     cout << "Current rate: $" << currentBet << endl;
-    cout << "1. Call" << endl << "2. Raise" << endl << "3. Fold" << endl << "Choice: ";
+    cout << "1. Call" << endl << "2. Raise" << endl << "3. Fold" << endl << "?> Choice: ";
     
     int choice; cin >> choice;
 
@@ -242,7 +300,7 @@ void playRound() {
         showStatus(false);
 
         cout << endl << "--- YOUR MOVE ---" << endl;
-        cout << "1. Take card ($5)" << endl << "2. Exchange card ($10)" << endl << "3. Wait" << endl << "Choice: ";
+        cout << "1. Take card ($5)" << endl << "2. Exchange card ($10)" << endl << "3. Wait" << endl << "?> Choice: ";
         
         int choice; cin >> choice;
         

@@ -35,7 +35,7 @@ class Player{
         }
 };
 
-//  Funkcja sprawdzani istnienia gracza
+//  Funkcja sprawdzania istnienia gracza
 bool fileExists(string playerName) {
     ifstream infile(playerName + ".txt");
     return infile.good();
@@ -49,38 +49,90 @@ bool isNumber(string str) {
 }
 
 //  Funkcja do tworzenia pliku nowego gracza
-void createPlayer(string playerName, int money){
+void createPlayer(string playerName){
+    string x;
     if (!fileExists(playerName)) {
         ofstream file(playerName + ".txt", ios::out);
+        cout << "Registration: " << endl;
         cout << "Please set a password: ";
-        string x;
         cin >> x;
         file << x;
-        cout << "How much money do you want to start with?: ";
+        cout << "What is your initial bet?: ";
         while (true) {
             cin >> x;
-            if (isNumber) {
+            if (isNumber(x)) {
                 file << x;
+                break;
             }
             else {
                 cout << x << " is not a number. Enter amount: ";
             }
         }
+        cout << "User created successfully. You can now log in." << endl;
         file.close();
+    }
+    else {
+        cout << "Player already exists. Please select login or create using a different username."<<endl;
     }
 }
 
 //  Funkcja do pobierania danych gracza z pliku o nazwie gracza i przekazywania danych do currentPlayer
 Player getCurrentPlayer(string playerName){
-    ifstream file(playerName + ".txt", ios::in);
-
-
-
-    file.close();
+    if(!fileExists(playerName)){
+        cout << "Player does not exist. Please create a new player." << endl;
+    }
+    else {
+        ifstream file(playerName + ".txt", ios::in);
+        cout << "Login: " << endl;
+        Player currentPlayer;
+        string playerData;
+        file >> playerData;
+		cout << "Enter your password: ";
+        string password;
+        while (true) {
+            cin >> password;
+            if (password == playerData) {
+                file >> playerData;
+                currentPlayer.setNickname(playerName);
+                currentPlayer.setMoney(stoi(playerData));
+                cout << "Login successful. Welcome, " << currentPlayer.getNickname() << "!" << endl;
+                file.close();
+                return currentPlayer;
+            }
+            else {
+                cout << "Incorrect password. Please try again: ";
+			}
+        }
+        file.close();
+    }
 }
 
 int main(int argc, char const *argv[])
 {
+    Player currentPlayer;
+    cout << "Would you like to log in or create a new player? (L/C)" << endl;
+    string loginChoice;
+    while (true) {
+        cin >> loginChoice;
+        if (loginChoice == "L") {
+            cout << "Enter your username: ";
+            string playerName;
+            cin >> playerName;
+            currentPlayer = getCurrentPlayer(playerName);
+            break;
+        }
+        else if (loginChoice == "C") {
+            cout << "Enter your desired username: ";
+            string playerName;
+            cin >> playerName;
 
+            createPlayer(playerName);
+			currentPlayer = getCurrentPlayer(playerName);
+            break;
+        }
+        else {
+            cout << "Invalid choice. Please enter L to log in or C to create a new player." << endl;
+		}
+    }
     return 0;
 }

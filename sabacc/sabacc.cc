@@ -1,12 +1,13 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <cmath>
 
 using namespace std;
 
 // ZMIENNE GLOBALNE
 
-int pHand[15]; 
+int pHand[15];
 int dHand[15];
 
 int pSize = 0; 
@@ -18,6 +19,15 @@ int dCredits = 150;
 int gamePot = 0; 
 int sabaccPot = 0; 
 int currentBet = 0;
+
+int startCredits = 0;
+
+// Nowe stałe procentowe dla kosztów akcji
+const double percentageEnter = 0.10;    
+const double percentageDraw = 0.03;    
+const double percentageSwap = 0.06;    
+const double percentageSabacc = 0.05;
+const double  percentageRaise = 0.05;
 
 // FUNKCJE POMOCNICZE
 
@@ -115,6 +125,56 @@ void printCard(int hand[], int size, bool hide) {
     }
 }
 
+int getCost(double percentage) {
+    return (int)ceil(startCredits * percentage);
+}
+
+int validateInput(string prompt, int minValue, int maxValue) {
+    
+    string inputString;
+    int inputInt;
+    
+    while (true) {
+        
+        cout << prompt;
+        cin >> inputString;
+        
+        try {
+            
+            inputInt = stoi(inputString);
+            inputInt = floor(inputInt);
+            
+            if (minValue == 0 && maxValue == 0){
+                
+                if (inputInt > 0) {
+                    return inputInt;
+                }
+                else {
+                    
+                    cout << "!> ERROR: Input positive number of money!" << endl;
+                }
+                
+            } else {
+                
+                if (inputInt >= minValue && inputInt <= maxValue) {
+                
+                return inputInt;
+                
+                }
+                else {
+                    cout << "!> ERROR: Input number from " << minValue << " to " << maxValue << "!" << endl;
+                }
+            }
+        } 
+        catch (...) {
+            
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "!> ERROR: Input a valid number!" << endl;
+        }
+    }
+}
+
 // LOGIKA DEALERA
 
 void dealerAction() {
@@ -123,10 +183,13 @@ void dealerAction() {
 
     int currentScore = calculateScore(dHand, dSize);
     int currentAbs = myAbs(currentScore);
-
-    // 1. Logika wymiany (Koszt 10)
     
-    if (dCredits >= 10 && currentAbs > 5) {
+    int swapCost = getCost(percentageSwap);
+    int drawCost = getCost(percentageDraw);
+
+    // Wymiana
+    
+    if (dCredits >= swapCost && currentAbs > 5) {
         
         int bestIndex = -1;
         int bestAbs = currentAbs;
@@ -146,24 +209,24 @@ void dealerAction() {
             
             dHand[bestIndex] = drawCard();
             
-            dCredits -= 10;
-            gamePot += 10;
+            dCredits -= swapCost;
+            gamePot += swapCost;
             
-            cout << ">> Dealer paid $10 and changed a card." << endl;
+            cout << ">> Dealer paid $" << swapCost << " to swap a card." << endl;
             return; 
         }
     }
 
     // 2. Logika dobierania (Koszt 5)
     
-    if (dCredits >= 5 && currentAbs > 7) {
+    if (dCredits >= drawCost && currentAbs > 7) {
         
         dHand[dSize++] = drawCard();
         
-        dCredits -= 5;
-        gamePot += 5;
+        dCredits -= drawCost;
+        gamePot += drawCost;
         
-        cout << ">> Dealer paid $10 and draw a card." << endl;
+       cout << ">> Dealer paid $" << drawCost << " to draw a card." << endl;
     }
 }
 
@@ -171,11 +234,13 @@ int dealerDecideBet() {
     
     int score = myAbs(calculateScore(dHand, dSize));
     
-    //Fold
-    if (currentBet > 20 && score > 8) return 0;
+    int limit = getCost(percentageEnter * 1.5);
     
-    // Raise
-    if (score <= 3 && (rand() % 100 < 30)) return 2; 
+    //Fold
+    if (currentBet > limit && score > 10) return 0;
+    
+    // Raise return 2; 
+    if (score <= 3 && (rand() % 100 < 30)) return 2;
     
     //Call
     return 1;
@@ -216,9 +281,9 @@ bool handleBetting() {
     
     cout << endl << "--- LICITATION ---" << endl;
     cout << "Current rate: $" << currentBet << endl;
-    cout << "1. Call" << endl << "2. Raise" << endl << "3. Fold" << endl << "?> Choice: ";
+    cout << "1. Call" << endl << "2. Raise" << endl << "3. Fold" << endl;
     
-    int choice; cin >> choice;
+    int choice = validateInput("?> Choice: ", 1, 3);
 
     if (choice == 3) {
         
@@ -228,7 +293,7 @@ bool handleBetting() {
     }
     if (choice == 2) {
         
-        int raise; cout << "How much you raise?: "; cin >> raise;
+        int raise = validateInput("?> How much you raise?: ", 0, 0);
         
         currentBet += raise;
     }
@@ -243,7 +308,7 @@ bool handleBetting() {
     } 
     else if (dAction == 2) {
         
-        int dRaise = (rand() % 10) + 1;
+        int dRaise = getCost(percentageRaise) + (rand() % 10);
 
         currentBet += dRaise;
         
@@ -281,13 +346,24 @@ void handleSpike() {
 
 void playRound() {
     
-    pSize = 0; dSize = 0;
-    gamePot = 0; currentBet = 0;
-
-    // KOSZTY WEJŚCIOWE
+    int costEnter = getCost(percentageEnter);
+    int costSabacc = getCost(percentageSabacc);
     
-    pCredits -= 15; dCredits -= 15; 
-    gamePot += 20; sabaccPot += 10;
+    if (pCredits < costEnter + costSabacc) {
+        cout << "!> Not enough credits to play!" << endl;
+        pCredits = 0; return;
+    }
+    
+    pSize = 0; 
+    dSize = 0;
+    
+    gamePot = costEnter * 2;
+    sabaccPot += costSabacc * 2;
+
+    pCredits -= (costEnter + costSabacc); 
+    dCredits -= (costEnter + costSabacc); 
+    
+    currentBet = 0;
 
     pHand[pSize++] = drawCard(); 
     pHand[pSize++] = drawCard();
@@ -300,25 +376,29 @@ void playRound() {
         showStatus(false);
 
         cout << endl << "--- YOUR MOVE ---" << endl;
-        cout << "1. Take card ($5)" << endl << "2. Exchange card ($10)" << endl << "3. Wait" << endl << "?> Choice: ";
+        cout << "1. Draw ($" << getCost(percentageDraw) << ")" << endl << "2. Swap ($" << getCost(percentageSwap) << ")" << endl << "3. Wait" << endl;
         
-        int choice; cin >> choice;
+        int choice = validateInput("?> Choice: ", 1, 3);
         
         if (choice == 1 && pCredits >= 5) {
             
             pHand[pSize++] = drawCard();
-            pCredits -= 5; gamePot += 5;
+            
+            pCredits -= getCost(percentageDraw); 
+            gamePot += getCost(percentageDraw);
         } 
         else if (choice == 2 && pSize > 0 && pCredits >= 10) {
             
-            cout << "Card to change (1-" << pSize << "): ";
+            string cardPrompt = ">> Card to swap (1 - " + to_string(pSize) + "): ";
             
-            int idx; cin >> idx;
+            int card = validateInput(cardPrompt, 1, pSize);
             
-            if (idx > 0 && idx <= pSize) {
+            if (card > 0 && card <= pSize) {
                 
-                pHand[idx-1] = drawCard();
-                pCredits -= 10; gamePot += 10;
+                pHand[card-1] = drawCard();
+                
+                pCredits -= getCost(percentageSwap); 
+                gamePot += getCost(percentageSwap);
             }
         }
 
@@ -339,12 +419,12 @@ void playRound() {
 
     if (playerWins && pAbs <= 23) {
         
-        cout << "YOU'RE A WINNER! You won $" << gamePot << "." << endl;
+        cout << "!> YOU'RE A WINNER! You won $" << gamePot << "." << endl;
         pCredits += gamePot;
         
         if (pScore == 0) {
             
-            cout << "PURE SABACC! Bonus: $" << sabaccPot << "." << endl;
+            cout << "!> PURE SABACC! Bonus: $" << sabaccPot << "." << endl;
             
             pCredits += sabaccPot; 
             sabaccPot = 0;
@@ -352,7 +432,7 @@ void playRound() {
     } 
     else {
         
-        cout << "YOU LOST. Dealer won." << endl;
+        cout << "!> YOU LOST. Dealer won." << endl;
         
         dCredits += gamePot;
     }
@@ -364,6 +444,11 @@ int main() {
     
     cout << "=== WELCOME IN CANTYNA - SABACC CORELLIAN SPIKE ===" << endl;
     
+    startCredits = validateInput("?> Set your starting credits: ", 0, 0);
+    
+    pCredits = startCredits;
+    dCredits = startCredits;
+    
     char playAgain = 'y';
     
     while ((playAgain == 'y' || playAgain == 'Y') && pCredits > 0) {
@@ -372,11 +457,11 @@ int main() {
         
         if (pCredits <= 0) {
             
-            cout << endl << "Bankrut! You've been thrown out." << endl;
+            cout << endl << "!> Bankrut! You've been thrown out." << endl;
             break;
         }
         
-        cout << endl << "Wanna play again? (y/n): ";
+        cout << endl << "?> Wanna play again? (y/n): ";
         
         cin >> playAgain;
     }

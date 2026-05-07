@@ -97,7 +97,6 @@ Player getCurrentPlayer(string playerName) {
 	}
 	else {
 		ifstream file(playerName + ".txt", ios::in);
-		cout << "Login: " << endl;
 		Player currentPlayer;
 		string playerData;
 		file >> playerData;

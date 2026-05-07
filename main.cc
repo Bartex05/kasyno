@@ -118,6 +118,7 @@ Player getCurrentPlayer(string playerName) {
 			}
 		}
 		file.close();
+		return currentPlayer;
 	}
 }
 

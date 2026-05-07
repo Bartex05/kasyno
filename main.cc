@@ -11,53 +11,119 @@
 
 using namespace std;
 
-class Player{
-    private:
-        int id;
-        int money;                                   
-        string nickname;
-    public:
-        Player(){                                           //  Defaults
-            this->id = 0;
-            this->nickname = "placeholder";
-            this->money = 5000;                             //  Startowa ilość kasy do ustalenia
-        };
-        Player(int id, string nickname, int money){         //  Konstruktor przy tworzeniu obiektu currentPlayer za pomocą danych z pliku players.txt
-            this->id = id;
-            this->nickname = nickname;
-            this->money = money;
-        }
+																	//	-----> GRACZ <-----
+//  Obiekty tej klasy będą wykorzystywane do zapisywania pieniędzy wygranych lub przegranych NA KOŃCU danej gry/stołu po czym będzie wpisywany do pliku players.txt
+class Player {
+private:
+	int money;
+	string nickname;
+public:
+	Player() {                                           //  Defaults
+		this->nickname = "placeholder";
+		this->money = 5000;
+	};
+	Player(int id, string nickname, int money) {         //  Konstruktor przy tworzeniu obiektu currentPlayer za pomocą danych z pliku gracza
+		this->nickname = nickname;
+		this->money = money;
+	}
 
-        void setId(int id){                                 //  Zapisywanie i pobieranie wartości
-            this->id = id;
-        }
-        void setNickname(string nickname){
-            this->nickname = nickname;
-        }
-        string getNickname(){                           
-            return this->nickname;
-        }
-        void setMoney(int money){                       
-            this->money = money;
-        }
-        int getMoney(){                                 
-            return this->money;
-        }
-        
-        int addPlayer(string);
-        int loadPlayer();
+	void setNickname(string nickname) {
+		this->nickname = nickname;
+	}
+	string getNickname() {
+		return this->nickname;
+	}
+	void setMoney(int money) {
+		this->money = money;
+	}
+	int getMoney() {
+		return this->money;
+	}
 };
+
+//  Funkcja sprawdzania istnienia gracza
+bool fileExists(string playerName) {
+	ifstream infile(playerName + ".txt");
+	return infile.good();
+}
+
+bool isNumber(string str) {
+	for (char c : str) {
+		if (isdigit(c) == 0) return false;
+	}
+	return true;
+}
+
+//  Funkcja do tworzenia pliku nowego gracza
+void createPlayer(string playerName) {
+	string x;
+	if (!fileExists(playerName)) {
+		ofstream file(playerName + ".txt", ios::out);
+		cout << "Registration: " << endl;
+		cout << "Please set a password: ";
+		cin >> x;
+		file << x << endl;
+		cout << "What is your initial bet?: ";
+		while (true) {
+			cin >> x;
+			if (isNumber(x)) {
+				file << x;
+				break;
+			}
+			else {
+				cout << x << " is not a number. Enter amount: ";
+			}
+		}
+		cout << "User created successfully. You can now log in." << endl;
+		file.close();
+	}
+	else {
+		cout << "Player already exists. Please select login or create using a different username." << endl;
+	}
+}
+
+//  Funkcja do pobierania danych gracza z pliku o nazwie gracza i przekazywania danych do currentPlayer
+Player getCurrentPlayer(string playerName) {
+	if (!fileExists(playerName)) {
+		cout << "Player does not exist. Please create a new player." << endl;
+	}
+	else {
+		ifstream file(playerName + ".txt", ios::in);
+		cout << "Login: " << endl;
+		Player currentPlayer;
+		string playerData;
+		file >> playerData;
+		cout << "Enter your password: ";
+		string password;
+		while (true) {
+			cin >> password;
+			if (password == playerData) {
+				file >> playerData;
+				currentPlayer.setNickname(playerName);
+				currentPlayer.setMoney(stoi(playerData));
+				cout << "Login successful. Welcome, " << currentPlayer.getNickname() << "!" << endl;
+				file.close();
+				return currentPlayer;
+			}
+			else {
+				cout << "Incorrect password. Please try again: ";
+			}
+		}
+		file.close();
+	}
+}
+															//	-----> KONIEC GRACZA <-----
 
 															//    ----->	POCZĄTEK BLACKJACKA	<-----
 //  Podstawowa klasa karty z zmienną ukrytej karty dealer-a
-class Card {
+class blackjackCard {
 private:
 	int faceValue;
 	string faceType, figureType;
 	bool isHidden;
 
 public:
-	Card(int faceValue, string faceType) {
+	blackjackCard(int faceValue, string faceType) {
 		this->faceValue = faceValue;
 		this->faceType = faceType;
 		this->isHidden = false;
@@ -90,7 +156,7 @@ public:
 };
 
 //  Funkcja wypisująca przekazany wektor kart
-void writeCards(vector<Card> v) {
+void blackjackWriteCards(vector<blackjackCard> v) {
 	for (auto c : v) {
 		if (c.getFigureType() == "Number") {
 			cout << c.getFaceValue() << " of " << c.getFaceType() << endl;
@@ -102,7 +168,7 @@ void writeCards(vector<Card> v) {
 }
 
 //  Funkcja sprawdzająca aktualną wratość wszystkich kart i przekazywaniu czy ich łączna wartość przebija 21 (wliczając logikę miekkich asów)
-int handValue(vector<Card> v) {
+int blackjackHandValue(vector<blackjackCard> v) {
 	int valueCounter = 0, aceAmount = 0;
 	for (auto c : v) {
 		valueCounter += c.getFaceValue();
@@ -145,10 +211,10 @@ int Blackjack(int money) {
 	}
 
 	//  Vectory wszystkich kart, dealera i gracza
-	vector<Card> playingCards;
-	vector<Card> dealerCards;
-	vector<Card> playerCards;
-	vector<Card> splitPlayerCards;
+	vector<blackjackCard> playingCards;
+	vector<blackjackCard> dealerCards;
+	vector<blackjackCard> playerCards;
+	vector<blackjackCard> splitPlayerCards;
 
 	cout << "Are you going to approach the table where the dealer Hits soft 17 or the table where he Stays at soft 17? (H/S): ";     //   Wybór miękkiej 17
 	string soft17;
@@ -163,7 +229,7 @@ int Blackjack(int money) {
 	//  Wypełnienie vectora wszystkimi kartami używanymi podczas gry w Blackjack i potasowanie jej
 	for (int i = 0; i < 4; i++) {
 		for (int j = 1; j <= 13; j++) {
-			Card playCard(0, "Spades");     //   Podstawowa karta jest ostatnią wpisywaną aby zmniejszyć ilość wykonywanych działań
+			blackjackCard playCard(0, "Spades");     //   Podstawowa karta jest ostatnią wpisywaną aby zmniejszyć ilość wykonywanych działań
 
 			if (i == 0) { playCard.setFaceType("Hearts"); }
 			else if (i == 1) { playCard.setFaceType("Diamonds"); }
@@ -227,12 +293,12 @@ int Blackjack(int money) {
 	}
 
 	//  Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę bo ma natural
-	if (handValue(playerCards) == 21) {
+	if (blackjackHandValue(playerCards) == 21) {
 		cout << "Your cards: " << endl;
-		writeCards(playerCards);
-		if (handValue(dealerCards) == 21) {
+		blackjackWriteCards(playerCards);
+		if (blackjackHandValue(dealerCards) == 21) {
 			cout << "Dealer cards: " << endl;
-			writeCards(dealerCards);
+			blackjackWriteCards(dealerCards);
 			cout << "Both you and the dealer have a natural hand. Your bet is returned" << endl;
 			return money;
 		}
@@ -258,10 +324,10 @@ int Blackjack(int money) {
 		else {
 			cout << "Your first hand cards: " << endl;
 		}
-		writeCards(playerCards);
+		blackjackWriteCards(playerCards);
 
-		//  Logika wykorzystująca handValue do sprawdzenia czy gracz przegrał
-		if (handValue(playerCards) > 21) {
+		//  Logika wykorzystująca blackjackHandValue do sprawdzenia czy gracz przegrał
+		if (blackjackHandValue(playerCards) > 21) {
 			//  Gdy nie ma się dzielonych kart i się przebiło 21 to się z automatu przegrywa ale reszta kodu poza pętlą gry wciąż się odbywa aby gracz mógł zobaczyć karty dealera
 			if (splitFlag == false) {
 				bust = true;
@@ -281,9 +347,9 @@ int Blackjack(int money) {
 		//  Jeśli gracz wybrał split to wypisz też karty z drugiej talii i sprawdź czy nie przebił 21 (aplikują się te same zasady co w funkcji powyżej dla pierwszej ale nie jedynej talii)
 		if (splitFlag == true) {
 			cout << "Your second hand cards: " << endl;
-			writeCards(splitPlayerCards);
+			blackjackWriteCards(splitPlayerCards);
 
-			if (handValue(splitPlayerCards) > 21) {
+			if (blackjackHandValue(splitPlayerCards) > 21) {
 				cout << "Second hand bust!" << endl;
 				if (splitStay == 1) {
 					bust = true;
@@ -374,7 +440,7 @@ int Blackjack(int money) {
 		else if (playerChoice == "H") {        //  HIT
 			playerCards.push_back(playingCards.back());
 			playingCards.pop_back();
-			writeCards(playerCards);
+			blackjackWriteCards(playerCards);
 		}
 		else if (playerChoice == "S") {      //  STAY
 			break;
@@ -420,8 +486,8 @@ int Blackjack(int money) {
 
 	//  Cała logika dealera zgodnie z zasadami Amerykańskiego blackjacka
 	if (soft17 == "H") {
-		while (handValue(dealerCards) <= 17) {
-			if (handValue(dealerCards) != 17) {
+		while (blackjackHandValue(dealerCards) <= 17) {
+			if (blackjackHandValue(dealerCards) != 17) {
 				dealerCards.push_back(playingCards.back());
 				playingCards.pop_back();
 			}
@@ -441,7 +507,7 @@ int Blackjack(int money) {
 		}
 	}
 	else if (soft17 == "S") {
-		while (handValue(dealerCards) < 17) {
+		while (blackjackHandValue(dealerCards) < 17) {
 			dealerCards.push_back(playingCards.back());
 			playingCards.pop_back();
 		}
@@ -449,16 +515,16 @@ int Blackjack(int money) {
 	}
 
 	//  Ostateczne sprawdzanie czy dealer przebił 21
-	if (handValue(dealerCards) > 21) {
+	if (blackjackHandValue(dealerCards) > 21) {
 		dealerBust = true;
 	}
 
 	//  Wypisanie posiadanych kart dealera z wypisywaniem ukrytej karty
 	cout << endl << "Dealer's cards: " << endl;
-	writeCards(dealerCards);
+	blackjackWriteCards(dealerCards);
 
 	cout << endl << "Your hand: " << endl;
-	writeCards(playerCards);
+	blackjackWriteCards(playerCards);
 
 	cout << endl;
 
@@ -474,11 +540,11 @@ int Blackjack(int money) {
 		cout << "Dealer bust and you didn't. You win." << endl;
 		return money + bettingMoney;
 	}
-	else if (bust == false && handValue(dealerCards) > handValue(playerCards)) {
+	else if (bust == false && blackjackHandValue(dealerCards) > blackjackHandValue(playerCards)) {
 		cout << "Dealer has a better hand than you. You lost your bet." << endl;
 		return money - bettingMoney;
 	}
-	else if (bust == false && handValue(dealerCards) < handValue(playerCards)) {
+	else if (bust == false && blackjackHandValue(dealerCards) < blackjackHandValue(playerCards)) {
 		cout << "You have a better hand than dealer. You won." << endl;
 		return money + bettingMoney;
 	}
@@ -1365,6 +1431,32 @@ int ruletka(int saldo)
 
 int main()
 {
+	Player currentPlayer;
+	cout << "Would you like to log in or create a new player? (L/C)" << endl;
+	string loginChoice;
+	while (true) {
+		cin >> loginChoice;
+		if (loginChoice == "L") {
+			cout << "Enter your username: ";
+			string playerName;
+			cin >> playerName;
+			currentPlayer = getCurrentPlayer(playerName);
+			break;
+		}
+		else if (loginChoice == "C") {
+			cout << "Enter your desired username: ";
+			string playerName;
+			cin >> playerName;
+
+			createPlayer(playerName);
+			currentPlayer = getCurrentPlayer(playerName);
+			break;
+		}
+		else {
+			cout << "Invalid choice. Please enter L to log in or C to create a new player." << endl;
+		}
+	}
+
 	//	Ta zmienna jest umieszczona w tym nadrzędnym zakresie dla efektywnego powtarzania gry
     int gameChoice = -1;
 	int bankspermy = 5000;

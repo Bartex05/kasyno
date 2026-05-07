@@ -14,9 +14,9 @@ class Player{
     public:
         Player(){                                           //  Defaults
             this->nickname = "placeholder";
-            this->money = 5000;                             //  Startowa ilość kasy do ustalenia
+            this->money = 5000;
         };
-        Player(int id, string nickname, int money){         //  Konstruktor przy tworzeniu obiektu currentPlayer za pomocą danych z pliku players.txt
+        Player(int id, string nickname, int money){         //  Konstruktor przy tworzeniu obiektu currentPlayer za pomocą danych z pliku gracza
             this->nickname = nickname;
             this->money = money;
         }

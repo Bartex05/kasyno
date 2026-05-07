@@ -56,7 +56,7 @@ void createPlayer(string playerName){
         cout << "Registration: " << endl;
         cout << "Please set a password: ";
         cin >> x;
-        file << x;
+        file << x << endl;
         cout << "What is your initial bet?: ";
         while (true) {
             cin >> x;

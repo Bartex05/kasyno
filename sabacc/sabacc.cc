@@ -129,6 +129,52 @@ int getCost(double percentage) {
     return (int)ceil(startCredits * percentage);
 }
 
+int validateInput(string prompt, int minValue, int maxValue) {
+    
+    string inputString;
+    int inputInt;
+    
+    while (true) {
+        
+        cout << prompt;
+        cin >> inputString;
+        
+        try {
+            
+            inputInt = stoi(inputString);
+            inputInt = floor(inputInt);
+            
+            if (minValue == 0 && maxValue == 0){
+                
+                if (inputInt > 0) {
+                    return inputInt;
+                }
+                else {
+                    
+                    cout << "!> ERROR: Input positive number of money!" << endl;
+                }
+                
+            } else {
+                
+                if (inputInt >= minValue && inputInt <= maxValue) {
+                
+                return inputInt;
+                
+                }
+                else {
+                    cout << "!> ERROR: Input number from " << minValue << " to " << maxValue << "!" << endl;
+                }
+            }
+        } 
+        catch (...) {
+            
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "!> ERROR: Input a valid number!" << endl;
+        }
+    }
+}
+
 // LOGIKA DEALERA
 
 void dealerAction() {
@@ -235,9 +281,9 @@ bool handleBetting() {
     
     cout << endl << "--- LICITATION ---" << endl;
     cout << "Current rate: $" << currentBet << endl;
-    cout << "1. Call" << endl << "2. Raise" << endl << "3. Fold" << endl << "?> Choice: ";
+    cout << "1. Call" << endl << "2. Raise" << endl << "3. Fold" << endl;
     
-    int choice; cin >> choice;
+    int choice = validateInput("?> Choice: ", 1, 3);
 
     if (choice == 3) {
         
@@ -247,7 +293,7 @@ bool handleBetting() {
     }
     if (choice == 2) {
         
-        int raise; cout << "?> How much you raise?: "; cin >> raise;
+        int raise = validateInput("?> How much you raise?: ", 0, 0);
         
         currentBet += raise;
     }
@@ -330,9 +376,9 @@ void playRound() {
         showStatus(false);
 
         cout << endl << "--- YOUR MOVE ---" << endl;
-        cout << "1. Draw ($" << getCost(percentageDraw) << ")" << endl << "2. Swap ($" << getCost(percentageSwap) << ")" << endl << "3. Wait" << endl << "?> Choice: ";
+        cout << "1. Draw ($" << getCost(percentageDraw) << ")" << endl << "2. Swap ($" << getCost(percentageSwap) << ")" << endl << "3. Wait" << endl;
         
-        int choice; cin >> choice;
+        int choice = validateInput("?> Choice: ", 1, 3);
         
         if (choice == 1 && pCredits >= 5) {
             
@@ -343,13 +389,13 @@ void playRound() {
         } 
         else if (choice == 2 && pSize > 0 && pCredits >= 10) {
             
-            cout << ">> Card to change (1-" << pSize << "): ";
+            string cardPrompt = ">> Card to swap (1 - " + to_string(pSize) + "): ";
             
-            int idx; cin >> idx;
+            int card = validateInput(cardPrompt, 1, pSize);
             
-            if (idx > 0 && idx <= pSize) {
+            if (card > 0 && card <= pSize) {
                 
-                pHand[idx-1] = drawCard();
+                pHand[card-1] = drawCard();
                 
                 pCredits -= getCost(percentageSwap); 
                 gamePot += getCost(percentageSwap);
@@ -398,8 +444,7 @@ int main() {
     
     cout << "=== WELCOME IN CANTYNA - SABACC CORELLIAN SPIKE ===" << endl;
     
-    cout << "?> Set your starting credits: ";
-    cin >> startCredits;
+    startCredits = validateInput("?> Set your starting credits: ", 0, 0);
     
     pCredits = startCredits;
     dCredits = startCredits;

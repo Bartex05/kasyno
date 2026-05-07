@@ -16,15 +16,17 @@ using namespace std;
 class Player {
 private:
 	int money;
-	string nickname;
+	string nickname, password;
 public:
 	Player() {                                           //  Defaults
 		this->nickname = "placeholder";
 		this->money = 5000;
+		this->password = "placeholder";
 	};
-	Player(int id, string nickname, int money) {         //  Konstruktor przy tworzeniu obiektu currentPlayer za pomocą danych z pliku gracza
+	Player(int id, string nickname, int money, string password) {         //  Konstruktor przy tworzeniu obiektu currentPlayer za pomocą danych z pliku gracza
 		this->nickname = nickname;
 		this->money = money;
+		this->password = password;
 	}
 
 	void setNickname(string nickname) {
@@ -38,6 +40,12 @@ public:
 	}
 	int getMoney() {
 		return this->money;
+	}
+	void setPassword(string password) {
+		this->password = password;
+	}
+	string getPassword() {
+		return this->password;
 	}
 };
 
@@ -100,6 +108,7 @@ Player getCurrentPlayer(string playerName) {
 			if (password == playerData) {
 				file >> playerData;
 				currentPlayer.setNickname(playerName);
+				currentPlayer.setPassword(password);
 				currentPlayer.setMoney(stoi(playerData));
 				cout << "Login successful. Welcome, " << currentPlayer.getNickname() << "!" << endl;
 				file.close();
@@ -111,6 +120,13 @@ Player getCurrentPlayer(string playerName) {
 		}
 		file.close();
 	}
+}
+
+void overwritePlayerMoney(Player currentPlayer) {
+	ofstream file(currentPlayer.getNickname() + ".txt", ios::out);
+	file << currentPlayer.getPassword() << endl;
+	file << currentPlayer.getMoney();
+	file.close();
 }
 															//	-----> KONIEC GRACZA <-----
 
@@ -1459,7 +1475,6 @@ int main()
 
 	//	Ta zmienna jest umieszczona w tym nadrzędnym zakresie dla efektywnego powtarzania gry
     int gameChoice = -1;
-	int bankspermy = 5000;
 
 	//  Ten gracz jest jeszcze do zmiany dlatego że będzie to w przyszłości tworzone z pliku wprowadzanego do vectora wszystkich istniejących gracze			<--- TODO
     Player player;
@@ -1496,7 +1511,8 @@ int main()
 		//	Ten switch służy do wyboru gry. Jak dodaje się grę to trzeba ją tutaj włożyć wraz z potencjalną logiką powtarzania gry. Jeśli ta logika już jest w funkcji gry to nie trzeba. Wystarczy wywołać.
         switch(gameChoice){
             case 1:
-                player.setMoney(Blackjack(player.getMoney()));
+                currentPlayer.setMoney(Blackjack(currentPlayer.getMoney()));
+				overwritePlayerMoney(currentPlayer);
 				cout << "Would you like to play again?: (Y/N)" << endl;
 				while (true) {
 					cin >> playAgain;
@@ -1512,8 +1528,8 @@ int main()
 					}
 				}
             case 2:
-                bankspermy=ruletka(bankspermy);
-				cout<<bankspermy;
+                currentPlayer.setMoney(ruletka(currentPlayer.getMoney()));
+				overwritePlayerMoney(currentPlayer);
 				gameChoice = -1;
                 break;
             default:                        //Ze względu na zabezpieczony brak nieodpowiedniego case, default jest używany do powtarzania gry poprzez niezmianianą zmienną 'gameChoice' lub wprost niepoprawnie wprowadzoną wartość.

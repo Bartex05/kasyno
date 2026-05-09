@@ -173,14 +173,70 @@ public:
 
 //  Funkcja wypisująca przekazany wektor kart
 void blackjackWriteCards(vector<blackjackCard> v) {
+	vector<string> lines(5, "");
 	for (auto c : v) {
+
+		//lines[0] += "┌─────┐ ";
+		//lines[1] += "│" + valueLeft + "   │ ";
+		//lines[2] += "│  " + symbol + "  │ ";
+		//lines[3] += "│   " + valueRight + "│ ";
+		//lines[4] += "└─────┘ ";
+
+		//	Górna i dolna część karty która nie potrzebuje żadnej adaptacji ani sprawdzania wartości
+		lines[0] += "┌─────┐ ";
+		lines[4] += "└─────┘ ";
+
+		//	Symbol karty
+		if (c.getFaceType() == "Hearts") {
+			lines[2] += "│  ♥  │ ";
+		}
+		else if (c.getFaceType() == "Diamonds") {
+			lines[2] += "│  ♦  │ ";
+		}
+		else if (c.getFaceType() == "Clubs") {
+			lines[2] += "│  ♣  │ ";
+		}
+		else if (c.getFaceType() == "Spades") {
+			lines[2] += "│  ♠  │ ";
+		}
+
+		//	Sprawdzanie czy karta jest liczbowa czy figurowa, jeśli liczbowa to wypisuje liczbę a jeśli figurowa to wypisuje znak figury
 		if (c.getFigureType() == "Number") {
-			cout << c.getFaceValue() << " of " << c.getFaceType() << endl;
+			//	Różna logika dla liczby dwucyfrowej i jednocyfrowej aby zachować estetykę karty
+			if (c.getFaceValue() < 10) {
+				lines[1] += "│" + to_string(c.getFaceValue()) + "    │ ";
+				lines[3] += "│    " + to_string(c.getFaceValue()) + "│ ";
+			}
+			else {
+				lines[1] += "│" + to_string(c.getFaceValue()) + "   │ ";
+				lines[3] += "│   " + to_string(c.getFaceValue()) + "│ ";
+			}
 		}
 		else {
-			cout << c.getFigureType() << " of " << c.getFaceType() << endl;
+			//	Każdy rodzaj figury jest jest wypisywany w jednej, pojedynczej z czterech liter więc nie trzeba rozróżniać jedno i dwucyfrowych wartości
+			if (c.getFigureType() == "Ace") {
+				lines[1] += "│A    │ ";
+				lines[3] += "│    A│ ";
+			}
+			else if (c.getFigureType() == "Jack") {
+				lines[1] += "│J    │ ";
+				lines[3] += "│    J│ ";
+			}
+			else if (c.getFigureType() == "Queen") {
+				lines[1] += "│Q    │ ";
+				lines[3] += "│    Q│ ";
+			}
+			else if (c.getFigureType() == "King") {
+				lines[1] += "│K    │ ";
+				lines[3] += "│    K│ ";
+			}
 		}
 	}
+	cout << lines[0] << endl;
+	cout << lines[1] << endl;
+	cout << lines[2] << endl;
+	cout << lines[3] << endl;
+	cout << lines[4] << endl;
 }
 
 //  Funkcja sprawdzająca aktualną wratość wszystkich kart i przekazywaniu czy ich łączna wartość przebija 21 (wliczając logikę miekkich asów)
@@ -564,7 +620,9 @@ int Blackjack(int money) {
 		cout << "You have a better hand than dealer. You won." << endl;
 		return money + bettingMoney;
 	}
-
+	else if (bust == false && blackjackHandValue(dealerCards) == blackjackHandValue(playerCards)) {
+		cout << "You and the dealer have the same hand value. Your bet is returned." << endl;
+	}
 	return money;
 }
 															//	----->    KONIEC BLACKJACKA    <-----

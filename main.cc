@@ -176,12 +176,6 @@ void blackjackWriteCards(vector<blackjackCard> v) {
 	vector<string> lines(5, "");
 	for (auto c : v) {
 
-		//lines[0] += "┌─────┐ ";
-		//lines[1] += "│" + valueLeft + "   │ ";
-		//lines[2] += "│  " + symbol + "  │ ";
-		//lines[3] += "│   " + valueRight + "│ ";
-		//lines[4] += "└─────┘ ";
-
 		//	Górna i dolna część karty która nie potrzebuje żadnej adaptacji ani sprawdzania wartości
 		lines[0] += "┌─────┐ ";
 		lines[4] += "└─────┘ ";
@@ -265,7 +259,7 @@ int Blackjack(int money) {
 
 	cout << "Current bank amount: " << money << endl;
 	cout << "(Note: The lowest denomination is of a white chip worth $1 so non-whole numbers are not allowed)" << endl;
-	while (money < bettingMoney || bettingMoney < 1) {
+	while (money < bettingMoney || bettingMoney < 100) {
 		cout << "How much are you betting?: ";
 		cin >> betCheckNegative;
 		if (betCheckNegative[0] == '-') {	//	Wykorzystuje betCheckNegative jako string aby pominąć błędy związane z wykorzystaniem cin dla jednocześnie ujemnych i decymalnych wartości
@@ -278,6 +272,10 @@ int Blackjack(int money) {
 		bettingMoney = floor(bettingMoney);
 		if (money < bettingMoney) {
 			cout << "You can't bet the money you don't have" << endl;
+			continue;
+		}
+		if (bettingMoney < 100) {
+			cout << "The minimum bet is 100" << endl;
 			continue;
 		}
 	}
@@ -1530,7 +1528,41 @@ int main()
 			cout << "Invalid choice. Please enter L to log in or C to create a new player." << endl;
 		}
 	}
-
+	cout << "Current bank: " << currentPlayer.getMoney() << endl;
+	string depositChoice = "";
+	while (true) {
+		if (currentPlayer.getMoney() < 100) {
+			cout << "You don't have enough money to play. The minimum is $100." << endl;
+		}
+		cout << "Would you like to deposit money to your account? (Y/N): ";
+		cin >> depositChoice;
+		if (depositChoice == "Y") {
+			cout << "How much would you like to deposit?" << endl;
+			int depositAmount = 0;
+			while (depositAmount <= 0) {
+				cin >> depositAmount;
+				if (depositAmount <= 0) {
+					cout << "Deposit amount must be greater than 0. Please enter a valid amount: " << endl;
+				}
+				else {
+					currentPlayer.setMoney(currentPlayer.getMoney() + depositAmount);
+					overwritePlayerMoney(currentPlayer);
+					cout << "Transaction successful. Your new bank: " << currentPlayer.getMoney() << endl;
+					break;
+				}
+			}
+		}
+		else if (depositChoice == "N") {
+			if (currentPlayer.getMoney() < 100) {
+				cout << "You don't have enough money to play and are not willing to deposit. You exit the casino." << endl;
+				return 0;
+			}
+			else {
+				break;
+			}
+		}
+	}
+	
 	//	Ta zmienna jest umieszczona w tym nadrzędnym zakresie dla efektywnego powtarzania gry
     int gameChoice = -1;
 
@@ -1550,12 +1582,13 @@ int main()
 		//	Ten while służy do sprawdzania czy gra o takim numerze istnieje. Jest to określane przez zakres określony przy pierwszej strzałce w komentarzu poniżej.
         while(true){   
 			if (gameChoice == 0) {
+				cout << "We hope to see you again!" << endl;
 				return 0;
 			}
 			if (gameChoice >= 1 && gameChoice <= 2	/*Tutaj dopisywane sprawdzanie liczby gry w postaci gameChoice >= 1 && gameChoice <= *Aktualna liczba możliwych gier* */) {         // <----------------------------
 				break;
 			}
-			else if (gameChoice != 0) {
+			else if(gameChoice != -1){
 				cout << "There is no game with that number." << endl;
 			}
 
@@ -1571,6 +1604,7 @@ int main()
             case 1:
                 currentPlayer.setMoney(Blackjack(currentPlayer.getMoney()));
 				overwritePlayerMoney(currentPlayer);
+				system("cls");
 				cout << "Would you like to play again?: (Y/N)" << endl;
 				while (true) {
 					cin >> playAgain;

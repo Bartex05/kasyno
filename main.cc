@@ -92,34 +92,35 @@ void createPlayer(string playerName) {
 
 //  Funkcja do pobierania danych gracza z pliku o nazwie gracza i przekazywania danych do currentPlayer
 Player getCurrentPlayer(string playerName) {
-	if (!fileExists(playerName)) {
-		cout << "Player does not exist. Please create a new player." << endl;
+
+	while(!fileExists(playerName)){
+		cout << "Player does not exist. Please retry: " << endl;
+		cin >> playerName;
 	}
-	else {
-		ifstream file(playerName + ".txt", ios::in);
-		Player currentPlayer;
-		string playerData;
-		file >> playerData;
-		cout << "Enter your password: ";
-		string password;
-		while (true) {
-			cin >> password;
-			if (password == playerData) {
-				file >> playerData;
-				currentPlayer.setNickname(playerName);
-				currentPlayer.setPassword(password);
-				currentPlayer.setMoney(stoi(playerData));
-				cout << "Login successful. Welcome, " << currentPlayer.getNickname() << "!" << endl;
-				file.close();
-				return currentPlayer;
-			}
-			else {
-				cout << "Incorrect password. Please try again: ";
-			}
+
+	ifstream file(playerName + ".txt", ios::in);
+	Player currentPlayer;
+	string playerData;
+	file >> playerData;
+	cout << "Enter your password: ";
+	string password;
+	while (true) {
+		cin >> password;
+		if (password == playerData) {
+			file >> playerData;
+			currentPlayer.setNickname(playerName);
+			currentPlayer.setPassword(password);
+			currentPlayer.setMoney(stoi(playerData));
+			cout << "Login successful. Welcome, " << currentPlayer.getNickname() << "!" << endl;
+			file.close();
+			return currentPlayer;
 		}
-		file.close();
-		return currentPlayer;
+		else {
+			cout << "Incorrect password. Please try again: ";
+		}
 	}
+	file.close();
+	return currentPlayer;
 }
 
 void overwritePlayerMoney(Player currentPlayer) {
@@ -1602,6 +1603,7 @@ int main()
 		//	Ten switch służy do wyboru gry. Jak dodaje się grę to trzeba ją tutaj włożyć wraz z potencjalną logiką powtarzania gry. Jeśli ta logika już jest w funkcji gry to nie trzeba. Wystarczy wywołać.
         switch(gameChoice){
             case 1:
+				system("cls");
                 currentPlayer.setMoney(Blackjack(currentPlayer.getMoney()));
 				overwritePlayerMoney(currentPlayer);
 				system("cls");

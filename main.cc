@@ -174,7 +174,7 @@ public:
 
 //  Funkcja wypisująca przekazany wektor kart
 void blackjackWriteCards(vector<blackjackCard> v) {
-	for(auto c : v){
+	/*for (auto c : v) {
 		if (c.getFigureType() == "Number") {
 			cout << c.getFaceValue() << " of " << c.getFaceType() << endl;
 		}
@@ -183,57 +183,67 @@ void blackjackWriteCards(vector<blackjackCard> v) {
 		}
 	}
 	cout << endl;
-	/*
+	*/
+	
 	vector<string> lines(5, "");
 	for (auto c : v) {
-
-		//	Górna i dolna część karty która nie potrzebuje żadnej adaptacji ani sprawdzania wartości
-		lines[0] += "┌─────┐ ";
-		lines[4] += "└─────┘ ";
-
-		//	Symbol karty
-		if (c.getFaceType() == "Hearts") {
-			lines[2] += "│  ♥  │ ";
-		}
-		else if (c.getFaceType() == "Diamonds") {
-			lines[2] += "│  ♦  │ ";
-		}
-		else if (c.getFaceType() == "Clubs") {
-			lines[2] += "│  ♣  │ ";
-		}
-		else if (c.getFaceType() == "Spades") {
-			lines[2] += "│  ♠  │ ";
-		}
-
-		//	Sprawdzanie czy karta jest liczbowa czy figurowa, jeśli liczbowa to wypisuje liczbę a jeśli figurowa to wypisuje znak figury
-		if (c.getFigureType() == "Number") {
-			//	Różna logika dla liczby dwucyfrowej i jednocyfrowej aby zachować estetykę karty
-			if (c.getFaceValue() < 10) {
-				lines[1] += "│" + to_string(c.getFaceValue()) + "    │ ";
-				lines[3] += "│    " + to_string(c.getFaceValue()) + "│ ";
-			}
-			else {
-				lines[1] += "│" + to_string(c.getFaceValue()) + "   │ ";
-				lines[3] += "│   " + to_string(c.getFaceValue()) + "│ ";
-			}
+		if (c.getIsHidden() == true) {
+			lines[0] += " -----  ";
+			lines[1] += "|     | ";
+			lines[2] += "|  ?  | ";
+			lines[3] += "|     | ";
+			lines[4] += " -----  ";
+			c.setIsHidden(false);
 		}
 		else {
-			//	Każdy rodzaj figury jest jest wypisywany w jednej, pojedynczej z czterech liter więc nie trzeba rozróżniać jedno i dwucyfrowych wartości
-			if (c.getFigureType() == "Ace") {
-				lines[1] += "│A    │ ";
-				lines[3] += "│    A│ ";
+			//	Górna i dolna część karty która nie potrzebuje żadnej adaptacji ani sprawdzania wartości
+			lines[0] += " -----  ";
+			lines[4] += " -----  ";
+
+			//	Symbol karty
+			if (c.getFaceType() == "Hearts") {
+				lines[2] += "|  H  | ";
 			}
-			else if (c.getFigureType() == "Jack") {
-				lines[1] += "│J    │ ";
-				lines[3] += "│    J│ ";
+			else if (c.getFaceType() == "Diamonds") {
+				lines[2] += "|  D  | ";
 			}
-			else if (c.getFigureType() == "Queen") {
-				lines[1] += "│Q    │ ";
-				lines[3] += "│    Q│ ";
+			else if (c.getFaceType() == "Clubs") {
+				lines[2] += "|  S  | ";
 			}
-			else if (c.getFigureType() == "King") {
-				lines[1] += "│K    │ ";
-				lines[3] += "│    K│ ";
+			else if (c.getFaceType() == "Spades") {
+				lines[2] += "|  C  | ";
+			}
+
+			//	Sprawdzanie czy karta jest liczbowa czy figurowa, jeśli liczbowa to wypisuje liczbę a jeśli figurowa to wypisuje znak figury
+			if (c.getFigureType() == "Number") {
+				//	Różna logika dla liczby dwucyfrowej i jednocyfrowej aby zachować estetykę karty
+				if (c.getFaceValue() < 10) {
+					lines[1] += "|" + to_string(c.getFaceValue()) + "    | ";
+					lines[3] += "|    " + to_string(c.getFaceValue()) + "| ";
+				}
+				else {
+					lines[1] += "|" + to_string(c.getFaceValue()) + "   | ";
+					lines[3] += "|   " + to_string(c.getFaceValue()) + "| ";
+				}
+			}
+			else {
+				//	Każdy rodzaj figury jest jest wypisywany w jednej, pojedynczej z czterech liter więc nie trzeba rozróżniać jedno i dwucyfrowych wartości
+				if (c.getFigureType() == "Ace") {
+					lines[1] += "|A    | ";
+					lines[3] += "|    A| ";
+				}
+				else if (c.getFigureType() == "Jack") {
+					lines[1] += "|J    | ";
+					lines[3] += "|    J| ";
+				}
+				else if (c.getFigureType() == "Queen") {
+					lines[1] += "|Q    | ";
+					lines[3] += "|    Q| ";
+				}
+				else if (c.getFigureType() == "King") {
+					lines[1] += "|K    | ";
+					lines[3] += "|    K| ";
+				}
 			}
 		}
 	}
@@ -242,7 +252,7 @@ void blackjackWriteCards(vector<blackjackCard> v) {
 	cout << lines[2] << endl;
 	cout << lines[3] << endl;
 	cout << lines[4] << endl;
-	*/
+	
 }
 
 //  Funkcja sprawdzająca aktualną wratość wszystkich kart i przekazywaniu czy ich łączna wartość przebija 21 (wliczając logikę miekkich asów)
@@ -364,19 +374,7 @@ int Blackjack(int money) {
 
 	//  Wypisanie posiadanych kart dealera bez wypisywania ukrytej karty
 	cout << "Dealer's cards: " << endl;
-	for (auto pCard : dealerCards) {
-		if (pCard.getIsHidden() == false) {
-			if (pCard.getFigureType() == "Number") {
-				cout << pCard.getFaceValue() << " of " << pCard.getFaceType() << endl;
-			}
-			else {
-				cout << pCard.getFigureType() << " of " << pCard.getFaceType() << endl;
-			}
-		}
-		else {
-			cout << "* FACE DOWN *" << endl;
-		}
-	}
+	blackjackWriteCards(dealerCards);
 
 	//  Gdy gracz na wejściu ma 21 to dostaje 1.5 dodatkowych pieniędzy i kończy grę bo ma natural
 	if (blackjackHandValue(playerCards) == 21) {
@@ -622,31 +620,31 @@ int Blackjack(int money) {
 	}
 	else if (bust == true) {
 		cout << "You bust and lost your bet." << endl;
-		this_thread::sleep_for(chrono::milliseconds(3000));
+		this_thread::sleep_for(chrono::milliseconds(5000));
 		system("cls");
 		return money - bettingMoney;
 	}
 	else if (bust == false && dealerBust == true) {
 		cout << "Dealer bust and you didn't. You win." << endl;
-		this_thread::sleep_for(chrono::milliseconds(3000));
+		this_thread::sleep_for(chrono::milliseconds(5000));
 		system("cls");
 		return money + bettingMoney;
 	}
 	else if (bust == false && blackjackHandValue(dealerCards) > blackjackHandValue(playerCards)) {
 		cout << "Dealer has a better hand than you. You lost your bet." << endl;
-		this_thread::sleep_for(chrono::milliseconds(3000));
+		this_thread::sleep_for(chrono::milliseconds(5000));
 		system("cls");
 		return money - bettingMoney;
 	}
 	else if (bust == false && blackjackHandValue(dealerCards) < blackjackHandValue(playerCards)) {
 		cout << "You have a better hand than dealer. You won." << endl;
-		this_thread::sleep_for(chrono::milliseconds(3000));
+		this_thread::sleep_for(chrono::milliseconds(5000));
 		system("cls");
 		return money + bettingMoney;
 	}
 	else if (bust == false && blackjackHandValue(dealerCards) == blackjackHandValue(playerCards)) {
 		cout << "You and the dealer have the same hand value. Your bet is returned." << endl;
-		this_thread::sleep_for(chrono::milliseconds(3000));
+		this_thread::sleep_for(chrono::milliseconds(5000));
 		system("cls");
 	}
 	return money;

@@ -93,7 +93,7 @@ int slot(int money)
         cout << "Enter bet amount (anything else to quit): $";
         cin >> bet;
 
-        if (bet <= 0) break;
+        if (bet =< 0) break;
         
         if (bet > balance) 
         {

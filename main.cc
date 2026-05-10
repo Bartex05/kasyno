@@ -69,11 +69,11 @@ void createPlayer(string playerName) {
 	string x;
 	if (!fileExists(playerName)) {
 		ofstream file(playerName + ".txt", ios::out);
-		cout << "Registration: " << endl;
-		cout << "Please set a password: ";
+		cout << ">> Registration: " << endl;
+		cout << "?> Please set a password: ";
 		cin >> x;
 		file << x << endl;
-		cout << "What is your initial bet?: ";
+		cout << "?> What is your initial bet?: ";
 		while (true) {
 			cin >> x;
 			if (isNumber(x)) {
@@ -81,14 +81,14 @@ void createPlayer(string playerName) {
 				break;
 			}
 			else {
-				cout << x << " is not a number. Enter amount: ";
+				cout << "!> " << x << " is not a number. Enter amount: ";
 			}
 		}
-		cout << "User created successfully. You can now log in." << endl;
+		cout << ">> User created successfully. You can now log in." << endl;
 		file.close();
 	}
 	else {
-		cout << "Player already exists. Please select login or create using a different username." << endl;
+		cout << "!> Player already exists. Please select login or create using a different username." << endl;
 	}
 }
 
@@ -96,7 +96,7 @@ void createPlayer(string playerName) {
 Player getCurrentPlayer(string playerName) {
 
 	while(!fileExists(playerName)){
-		cout << "Player does not exist. Please retry: " << endl;
+		cout << "!> Player does not exist. Please retry: ";
 		cin >> playerName;
 	}
 
@@ -104,7 +104,7 @@ Player getCurrentPlayer(string playerName) {
 	Player currentPlayer;
 	string playerData;
 	file >> playerData;
-	cout << "Enter your password: ";
+	cout << "?> Enter your password: ";
 	string password;
 	while (true) {
 		cin >> password;
@@ -113,12 +113,12 @@ Player getCurrentPlayer(string playerName) {
 			currentPlayer.setNickname(playerName);
 			currentPlayer.setPassword(password);
 			currentPlayer.setMoney(stoi(playerData));
-			cout << "Login successful. Welcome, " << currentPlayer.getNickname() << "!" << endl;
+			cout << ">> Login successful. Welcome, " << currentPlayer.getNickname() << "!" << endl;
 			file.close();
 			return currentPlayer;
 		}
 		else {
-			cout << "Incorrect password. Please try again: ";
+			cout << "!> Incorrect password. Please try again: ";
 		}
 	}
 	file.close();
@@ -1611,15 +1611,16 @@ int slot(int money)
 	int balance = money;
     int bet;
 
-    cout << "Welcome to the Casino!" << endl;
-    cout << "Starting Balance: " << balance << endl;
+	cout << "===> WELCOME TO SLOTS <===" << endl << endl;
+
+    cout << ">> Starting Balance: " << balance << endl;
 
     while (balance > 0) 
     {
-        cout << "Enter bet amount (0 to quit): ";
+        cout << "?> Enter bet amount (0 to quit): ";
 
 		while (!(cin >> bet)) { 
-			cout << "Enter bet amount (0 to quit): ";
+			cout << "?> Enter bet amount (0 to quit): ";
 			cin.clear(); 
 			cin.ignore(10000, '\n');
 		}
@@ -1628,7 +1629,7 @@ int slot(int money)
         
         if (bet > balance) 
         {
-            cout << "Not enough money!" << endl;
+            cout << "!> Not enough money!" << endl;
             continue;
         }
 
@@ -1673,18 +1674,18 @@ int slot(int money)
         
         if (win > 0) 
         {
-            cout << "You won: $" << win << "!" << endl;
+            cout << ">> You won: " << win << "!" << endl;
             balance += win;
         } 
         else 
         {
-            cout << "No luck this time." << endl;
+            cout << ">> No luck this time." << endl;
         }
 
-        cout << "Current Balance: $" << balance << endl;
+        cout << ">> Current Balance: " << balance << endl;
     }
 
-    cout << "Game over! You have: $" << balance << endl;
+    cout << "!> Game over! You have: " << balance << endl;
     
     return balance;
 }
@@ -1734,7 +1735,7 @@ int sabaccAbsolute(int n) {
     return (n < 0) ? -n : n;
 }
 
-int drawCard() {
+int sabaccDrawCard() {
     
     int r = rand() % 62;
     
@@ -1746,14 +1747,6 @@ int drawCard() {
     
     // Czerwone 1-10
     return -((rand() % 10) + 1); 
-}
-
-string getCardName(int v) {
-    
-    if (v == 0) return "Sylop (0)";
-    if (v > 0) return "Green +" + to_string(v);
-    
-    return "Red " + to_string(v);
 }
 
 void sabaccPrintCard(int hand[], int size, bool hide) {
@@ -1801,12 +1794,17 @@ void sabaccPrintCard(int hand[], int size, bool hide) {
             valueRight = " " + valueString; // Np. " 5"
         }
 
-        lines[0] += "\u250c\u2500\u2500\u2500\u2500\u2500\u2510 ";
-        //lines[0] += "┌─────┐ ";
-        lines[1] += "\u2502" + valueLeft + "   \u2502 ";
-        lines[2] += "\u2502  " + symbol + "  \u2502 ";
-        lines[3] += "\u2502   " + valueRight + "\u2502 ";
-        lines[4] += "\u2514\u2500\u2500\u2500\u2500\u2500\u2518 ";
+		//lines[0] += "\u250c\u2500\u2500\u2500\u2500\u2500\u2510 ";
+        //lines[1] += "\u2502" + valueLeft + "   \u2502 ";
+        //lines[2] += "\u2502  " + symbol + "  \u2502 ";
+        //lines[3] += "\u2502   " + valueRight + "\u2502 ";
+        //lines[4] += "\u2514\u2500\u2500\u2500\u2500\u2500\u2518 ";
+
+        lines[0] += " -----  ";
+        lines[1] += "|" + valueLeft + "   | ";
+        lines[2] += "|  " + symbol + "  | ";
+        lines[3] += "|   " + valueRight + "| ";
+        lines[4] += " -----  ";
     }
 
     for (int i = 0; i < 5; i++) {
@@ -1897,7 +1895,7 @@ void sabaccDealerAction() {
 
         if (bestIndex != -1) {
             
-            sabaccHandDealer[bestIndex] = drawCard();
+            sabaccHandDealer[bestIndex] = sabaccDrawCard();
             
             sabaccCreditsDealer -= swapCost;
             sabaccPotSabaccGame += swapCost;
@@ -1911,7 +1909,7 @@ void sabaccDealerAction() {
     
     if (sabaccCreditsDealer >= drawCost && currentAbs > 7) {
         
-        sabaccHandDealer[sabaccSizeDealer++] = drawCard();
+        sabaccHandDealer[sabaccSizeDealer++] = sabaccDrawCard();
         
         sabaccCreditsDealer -= drawCost;
         sabaccPotSabaccGame += drawCost;
@@ -2017,7 +2015,7 @@ bool sabaccHandleBetting() {
     return true;
 }
 
-void handleSpike() {
+void sabaccHandleSpike() {
     
     int d1 = rand() % 6 + 1, d2 = rand() % 6 + 1;
     
@@ -2029,8 +2027,8 @@ void handleSpike() {
         
         sabaccSizePlayer = 0; sabaccSizeDealer = 0;
         
-        for (int i = 0; i < oldP; i++) sabaccHandPlayer[sabaccSizePlayer++] = drawCard();
-        for (int i = 0; i < oldD; i++) sabaccHandDealer[sabaccSizeDealer++] = drawCard();
+        for (int i = 0; i < oldP; i++) sabaccHandPlayer[sabaccSizePlayer++] = sabaccDrawCard();
+        for (int i = 0; i < oldD; i++) sabaccHandDealer[sabaccSizeDealer++] = sabaccDrawCard();
     }
 }
 
@@ -2055,10 +2053,10 @@ void sabaccPlayRound() {
     
     sabaccCurrentBet = 0;
 
-    sabaccHandPlayer[sabaccSizePlayer++] = drawCard(); 
-    sabaccHandPlayer[sabaccSizePlayer++] = drawCard();
-    sabaccHandDealer[sabaccSizeDealer++] = drawCard(); 
-    sabaccHandDealer[sabaccSizeDealer++] = drawCard();
+    sabaccHandPlayer[sabaccSizePlayer++] = sabaccDrawCard(); 
+    sabaccHandPlayer[sabaccSizePlayer++] = sabaccDrawCard();
+    sabaccHandDealer[sabaccSizeDealer++] = sabaccDrawCard(); 
+    sabaccHandDealer[sabaccSizeDealer++] = sabaccDrawCard();
 
     for (int turn = 1; turn <= 3; turn++) {
         
@@ -2072,7 +2070,7 @@ void sabaccPlayRound() {
         
         if (choice == 1 && sabaccCreditsPlayer >= 5) {
             
-            sabaccHandPlayer[sabaccSizePlayer++] = drawCard();
+            sabaccHandPlayer[sabaccSizePlayer++] = sabaccDrawCard();
             
             sabaccCreditsPlayer -= sabaccGetCost(sabaccPercentageDraw); 
             sabaccPotSabaccGame += sabaccGetCost(sabaccPercentageDraw);
@@ -2085,7 +2083,7 @@ void sabaccPlayRound() {
             
             if (card > 0 && card <= sabaccSizePlayer) {
                 
-                sabaccHandPlayer[card-1] = drawCard();
+                sabaccHandPlayer[card-1] = sabaccDrawCard();
                 
                 sabaccCreditsPlayer -= sabaccGetCost(sabaccPercentageSwap); 
                 sabaccPotSabaccGame += sabaccGetCost(sabaccPercentageSwap);
@@ -2096,7 +2094,7 @@ void sabaccPlayRound() {
 
         if (!sabaccHandleBetting()) return;
         
-        handleSpike();
+        sabaccHandleSpike();
     }
 
     sabaccShowStatus(true);
@@ -2132,7 +2130,7 @@ int sabacc(int money) {
     
     srand(time(0));
     
-    cout << "=== WELCOME IN CANTYNA - SABACC CORELLIAN SPIKE ===" << endl;
+    cout << "===> WELCOME IN CANTYNA - SABACC CORELLIAN SPIKE <===" << endl;
     
     sabaccCreditsStart = money;
     
@@ -2164,19 +2162,20 @@ int sabacc(int money) {
 int main()
 {
 	Player currentPlayer;
-	cout << "Would you like to log in or create a new player? (L/C)" << endl;
+	cout << "===> CHOOSE AN OPTION <===" << endl << "L. Login" << endl << "R. Register" << endl << "?> Coice: ";
 	string loginChoice;
 	while (true) {
 		cin >> loginChoice;
-		if (loginChoice == "L") {
-			cout << "Enter your username: ";
+		cout << endl;
+		if (loginChoice == "L" || loginChoice == "l") {
+			cout << "?> Enter your username: ";
 			string playerName;
 			cin >> playerName;
 			currentPlayer = getCurrentPlayer(playerName);
 			break;
 		}
-		else if (loginChoice == "C") {
-			cout << "Enter your desired username: ";
+		else if (loginChoice == "R" || loginChoice == "r") {
+			cout << "?> Enter your desired username: ";
 			string playerName;
 			cin >> playerName;
 
@@ -2185,36 +2184,36 @@ int main()
 			break;
 		}
 		else {
-			cout << "Invalid choice. Please enter L to log in or C to create a new player." << endl;
+			cout << "!> Invalid choice. Please enter L to log in or R to register: ";
 		}
 	}
-	cout << "Current bank: " << currentPlayer.getMoney() << endl;
+	cout << ">> Current bank: " << currentPlayer.getMoney() << endl;
 	string depositChoice = "";
 	while (true) {
 		if (currentPlayer.getMoney() < 100) {
-			cout << "You don't have enough money to play. The minimum is $100." << endl;
+			cout << "!> You don't have enough money to play. The minimum is $100." << endl;
 		}
-		cout << "Would you like to deposit money to your account? (Y/N): ";
+		cout << "?> Would you like to deposit money to your account? (Y/N): ";
 		cin >> depositChoice;
-		if (depositChoice == "Y") {
-			cout << "How much would you like to deposit?" << endl;
+		if (depositChoice == "Y" || depositChoice == "y") {
+			cout << "Enter how much would you like to deposit: ";
 			int depositAmount = 0;
 			while (depositAmount <= 0) {
 				cin >> depositAmount;
 				if (depositAmount <= 0) {
-					cout << "Deposit amount must be greater than 0. Please enter a valid amount: " << endl;
+					cout << "!> Deposit amount must be greater than 0. Please enter a valid amount: ";
 				}
 				else {
 					currentPlayer.setMoney(currentPlayer.getMoney() + depositAmount);
 					overwritePlayerMoney(currentPlayer);
-					cout << "Transaction successful. Your new bank: " << currentPlayer.getMoney() << endl;
+					cout << ">> Transaction successful. Your new bank: " << currentPlayer.getMoney() << endl;
 					break;
 				}
 			}
 		}
-		else if (depositChoice == "N") {
+		else if (depositChoice == "N" || depositChoice == "n") {
 			if (currentPlayer.getMoney() < 100) {
-				cout << "You don't have enough money to play and are not willing to deposit. You exit the casino." << endl;
+				cout << "!> You don't have enough money to play and are not willing to deposit. You exit the casino." << endl;
 				return 0;
 			}
 			else {
@@ -2230,32 +2229,39 @@ int main()
     Player player;
 
     while(true){
-        cout<<"===>        WYBOR GRY        <==="<<endl;
+		system("clear");
+		
+		cout << "Your username: "<< currentPlayer.getNickname() << endl;
+		cout << "Current money: "<< currentPlayer.getMoney() << endl;
+
+        cout<<endl<<"===> CHOOSE A GAME <==="<<endl;
     
         cout<<"1. Blackjack"<<endl;         
-        cout<<"2. Roulette"<<endl;           //Do dopisania więcej
+        cout<<"2. Roulette"<<endl;
 		cout<<"3. Slot"<<endl;
 		cout<<"4. Sabacc"<<endl;
+		// Do dopisania więcej
 
         cout<<"0. Quit"<<endl;
 
-        cout<<"Please select a number to choose a game: ";
+        cout<<"?> Choice: ";
 
 		//	Ten while służy do sprawdzania czy gra o takim numerze istnieje. Jest to określane przez zakres określony przy pierwszej strzałce w komentarzu poniżej.
         while(true){   
 			if (gameChoice == 0) {
-				cout << "We hope to see you again!" << endl;
+				cout << ">> We hope to see you again!" << endl;
 				return 0;
 			}
 			if (gameChoice >= 1 && gameChoice <= 4	/*Tutaj dopisywane sprawdzanie liczby gry w postaci gameChoice >= 1 && gameChoice <= *Aktualna liczba możliwych gier* */) {         // <----------------------------
 				break;
 			}
 			else if(gameChoice != -1){
-				cout << "There is no game with that number." << endl;
+				cout << "!> There is no game with that number." << endl;
 			}
 
 			//	Wartość wyboru gry jest pobierana jako ostatnia aby umożliwić czystą funkcjonalność ponownej gry dla funkcji bez wbudowanej logiki ponownej gry.				<----- WAŻNE !!! (Należy gameChoice ustawiać na -1 w logice ponownej gry gdy gracz nie chce jej powtarzać)
 			cin >> gameChoice;
+			system("clear");
         }
 
 		//	String dla wszystkich gier które nie mają wbudowanej funkcjonalności powtarzania gry.
@@ -2297,7 +2303,7 @@ int main()
 				gameChoice = -1;
                 break;
             default:                        //Ze względu na zabezpieczony brak nieodpowiedniego case, default jest używany do powtarzania gry poprzez niezmianianą zmienną 'gameChoice' lub wprost niepoprawnie wprowadzoną wartość.
-                cout<<"No game has been chosen or the input is invalid."<<endl;
+                cout<<"!> No game has been chosen or the input is invalid."<<endl;
                 return 0;
         }
     }

@@ -174,6 +174,16 @@ public:
 
 //  Funkcja wypisująca przekazany wektor kart
 void blackjackWriteCards(vector<blackjackCard> v) {
+	for(auto c : v){
+		if (c.getFigureType() == "Number") {
+			cout << c.getFaceValue() << " of " << c.getFaceType() << endl;
+		}
+		else {
+			cout << c.getFigureType() << " of " << c.getFaceType() << endl;
+		}
+	}
+	cout << endl;
+	/*
 	vector<string> lines(5, "");
 	for (auto c : v) {
 
@@ -232,6 +242,7 @@ void blackjackWriteCards(vector<blackjackCard> v) {
 	cout << lines[2] << endl;
 	cout << lines[3] << endl;
 	cout << lines[4] << endl;
+	*/
 }
 
 //  Funkcja sprawdzająca aktualną wratość wszystkich kart i przekazywaniu czy ich łączna wartość przebija 21 (wliczając logikę miekkich asów)
@@ -251,6 +262,8 @@ int blackjackHandValue(vector<blackjackCard> v) {
 
 //  Główna funkcja zawierająca całką logikę grę
 int Blackjack(int money) {
+
+	system("cls");
 
 	cout << "You have chosen Blackjack" << endl;
 	cout << "At this casino there are no Hole Cards and the Dealer doesn't check the face-down card until all player actions are complete" << endl;
@@ -296,6 +309,8 @@ int Blackjack(int money) {
 			cout << soft17 << " is not a valid option. Please choose again: ";
 		}
 	}
+
+	system("cls");
 
 	//  Wypełnienie vectora wszystkimi kartami używanymi podczas gry w Blackjack i potasowanie jej
 	for (int i = 0; i < 4; i++) {
@@ -601,26 +616,38 @@ int Blackjack(int money) {
 
 	if (bust == true && dealerBust == true) {
 		cout << "Both you and the dealer bust however house rules state that in this situation player loses their bet." << endl;
+		this_thread::sleep_for(chrono::milliseconds(3000));
+		system("cls");
 		return money - bettingMoney;
 	}
 	else if (bust == true) {
 		cout << "You bust and lost your bet." << endl;
+		this_thread::sleep_for(chrono::milliseconds(3000));
+		system("cls");
 		return money - bettingMoney;
 	}
 	else if (bust == false && dealerBust == true) {
 		cout << "Dealer bust and you didn't. You win." << endl;
+		this_thread::sleep_for(chrono::milliseconds(3000));
+		system("cls");
 		return money + bettingMoney;
 	}
 	else if (bust == false && blackjackHandValue(dealerCards) > blackjackHandValue(playerCards)) {
 		cout << "Dealer has a better hand than you. You lost your bet." << endl;
+		this_thread::sleep_for(chrono::milliseconds(3000));
+		system("cls");
 		return money - bettingMoney;
 	}
 	else if (bust == false && blackjackHandValue(dealerCards) < blackjackHandValue(playerCards)) {
 		cout << "You have a better hand than dealer. You won." << endl;
+		this_thread::sleep_for(chrono::milliseconds(3000));
+		system("cls");
 		return money + bettingMoney;
 	}
 	else if (bust == false && blackjackHandValue(dealerCards) == blackjackHandValue(playerCards)) {
 		cout << "You and the dealer have the same hand value. Your bet is returned." << endl;
+		this_thread::sleep_for(chrono::milliseconds(3000));
+		system("cls");
 	}
 	return money;
 }
@@ -1603,10 +1630,8 @@ int main()
 		//	Ten switch służy do wyboru gry. Jak dodaje się grę to trzeba ją tutaj włożyć wraz z potencjalną logiką powtarzania gry. Jeśli ta logika już jest w funkcji gry to nie trzeba. Wystarczy wywołać.
         switch(gameChoice){
             case 1:
-				system("cls");
                 currentPlayer.setMoney(Blackjack(currentPlayer.getMoney()));
 				overwritePlayerMoney(currentPlayer);
-				system("cls");
 				cout << "Would you like to play again?: (Y/N)" << endl;
 				while (true) {
 					cin >> playAgain;
@@ -1621,6 +1646,7 @@ int main()
 						cout << playAgain << " is not a valid choice. Please choose again: " << endl;
 					}
 				}
+				break;
             case 2:
                 currentPlayer.setMoney(ruletka(currentPlayer.getMoney()));
 				overwritePlayerMoney(currentPlayer);

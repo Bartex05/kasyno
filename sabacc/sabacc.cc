@@ -7,31 +7,32 @@ using namespace std;
 
 // ZMIENNE GLOBALNE
 
-int pHand[15];
-int dHand[15];
+int sabaccHandPlayer[15];
+int sabaccHandDealer[15];
 
-int pSize = 0; 
-int dSize = 0;
+int sabaccSizePlayer = 0; 
+int sabaccSizeDealer = 0;
 
-int pCredits = 150; 
-int dCredits = 150; 
+int sabaccCreditsPlayer = 150; 
+int sabaccCreditsDealer = 150; 
 
-int gamePot = 0; 
-int sabaccPot = 0; 
-int currentBet = 0;
+int sabaccPotSabaccGame = 0; 
+int sabaccPotSabacc = 0; 
+int sabaccCurrentBet = 0;
 
-int startCredits = 0;
+int sabaccCreditsStart = 0;
 
-// Nowe stałe procentowe dla kosztów akcji
-const double percentageEnter = 0.10;    
-const double percentageDraw = 0.03;    
-const double percentageSwap = 0.06;    
-const double percentageSabacc = 0.05;
-const double  percentageRaise = 0.05;
+// STAŁE PROCENTOWE
+
+const double sabaccPercentageEnter = 0.10;    
+const double sabaccPercentageDraw = 0.03;    
+const double sabaccPercentageSwap = 0.06;    
+const double sabaccPercentageSabacc = 0.05;
+const double  sabaccPercentageRaise = 0.05;
 
 // FUNKCJE POMOCNICZE
 
-int calculateScore(int hand[], int size) {
+int sabaccCalculateScore(int hand[], int size) {
     
     int total = 0;
     
@@ -40,7 +41,7 @@ int calculateScore(int hand[], int size) {
     return total;
 }
 
-int myAbs(int n) {
+int sabaccAbsolute(int n) {
     
     return (n < 0) ? -n : n;
 }
@@ -67,7 +68,7 @@ string getCardName(int v) {
     return "Red " + to_string(v);
 }
 
-void printCard(int hand[], int size, bool hide) {
+void sabaccPrintCard(int hand[], int size, bool hide) {
     
     string lines[5] = {"", "", "", "", ""};
 
@@ -87,7 +88,7 @@ void printCard(int hand[], int size, bool hide) {
             
             symbol = "G";
         }
-        else {
+        else if (valueInt < 0) {
             
             symbol = "R";
         }
@@ -99,7 +100,7 @@ void printCard(int hand[], int size, bool hide) {
         } 
         else {
             
-            valueString = to_string(myAbs(valueInt));
+            valueString = to_string(sabaccAbsolute(valueInt));
         }
 
         // Padding
@@ -112,11 +113,12 @@ void printCard(int hand[], int size, bool hide) {
             valueRight = " " + valueString; // Np. " 5"
         }
 
-        lines[0] += "┌─────┐ ";
-        lines[1] += "│" + valueLeft + "   │ ";
-        lines[2] += "│  " + symbol + "  │ ";
-        lines[3] += "│   " + valueRight + "│ ";
-        lines[4] += "└─────┘ ";
+        lines[0] += "\u250c\u2500\u2500\u2500\u2500\u2500\u2510 ";
+        //lines[0] += "┌─────┐ ";
+        lines[1] += "\u2502" + valueLeft + "   \u2502 ";
+        lines[2] += "\u2502  " + symbol + "  \u2502 ";
+        lines[3] += "\u2502   " + valueRight + "\u2502 ";
+        lines[4] += "\u2514\u2500\u2500\u2500\u2500\u2500\u2518 ";
     }
 
     for (int i = 0; i < 5; i++) {
@@ -125,11 +127,11 @@ void printCard(int hand[], int size, bool hide) {
     }
 }
 
-int getCost(double percentage) {
-    return (int)ceil(startCredits * percentage);
+int sabaccGetCost(double sabaccPercentage) {
+    return (int)ceil(sabaccCreditsStart * sabaccPercentage);
 }
 
-int validateInput(string prompt, int minValue, int maxValue) {
+int sabaccValidateInput(string prompt, int minValue, int maxValue) {
     
     string inputString;
     int inputInt;
@@ -177,40 +179,40 @@ int validateInput(string prompt, int minValue, int maxValue) {
 
 // LOGIKA DEALERA
 
-void dealerAction() {
+void sabaccDealerAction() {
     
-    if (dSize == 0) return;
+    if (sabaccSizeDealer == 0) return;
 
-    int currentScore = calculateScore(dHand, dSize);
-    int currentAbs = myAbs(currentScore);
+    int currentScore = sabaccCalculateScore(sabaccHandDealer, sabaccSizeDealer);
+    int currentAbs = sabaccAbsolute(currentScore);
     
-    int swapCost = getCost(percentageSwap);
-    int drawCost = getCost(percentageDraw);
+    int swapCost = sabaccGetCost(sabaccPercentageSwap);
+    int drawCost = sabaccGetCost(sabaccPercentageDraw);
 
     // Wymiana
     
-    if (dCredits >= swapCost && currentAbs > 5) {
+    if (sabaccCreditsDealer >= swapCost && currentAbs > 5) {
         
         int bestIndex = -1;
         int bestAbs = currentAbs;
 
-        for (int i = 0; i < dSize; i++) {
+        for (int i = 0; i < sabaccSizeDealer; i++) {
             
-            int scoreWithoutCard = currentScore - dHand[i];
+            int scoreWithoutCard = currentScore - sabaccHandDealer[i];
             
-            if (myAbs(scoreWithoutCard) < bestAbs) {
+            if (sabaccAbsolute(scoreWithoutCard) < bestAbs) {
                 
-                bestAbs = myAbs(scoreWithoutCard);
+                bestAbs = sabaccAbsolute(scoreWithoutCard);
                 bestIndex = i;
             }
         }
 
         if (bestIndex != -1) {
             
-            dHand[bestIndex] = drawCard();
+            sabaccHandDealer[bestIndex] = drawCard();
             
-            dCredits -= swapCost;
-            gamePot += swapCost;
+            sabaccCreditsDealer -= swapCost;
+            sabaccPotSabaccGame += swapCost;
             
             cout << ">> Dealer paid $" << swapCost << " to swap a card." << endl;
             return; 
@@ -219,25 +221,25 @@ void dealerAction() {
 
     // 2. Logika dobierania (Koszt 5)
     
-    if (dCredits >= drawCost && currentAbs > 7) {
+    if (sabaccCreditsDealer >= drawCost && currentAbs > 7) {
         
-        dHand[dSize++] = drawCard();
+        sabaccHandDealer[sabaccSizeDealer++] = drawCard();
         
-        dCredits -= drawCost;
-        gamePot += drawCost;
+        sabaccCreditsDealer -= drawCost;
+        sabaccPotSabaccGame += drawCost;
         
        cout << ">> Dealer paid $" << drawCost << " to draw a card." << endl;
     }
 }
 
-int dealerDecideBet() {
+int sabaccDealerDecideBet() {
     
-    int score = myAbs(calculateScore(dHand, dSize));
+    int score = sabaccAbsolute(sabaccCalculateScore(sabaccHandDealer, sabaccSizeDealer));
     
-    int limit = getCost(percentageEnter * 1.5);
+    int limit = sabaccGetCost(sabaccPercentageEnter * 1.5);
     
     //Fold
-    if (currentBet > limit && score > 10) return 0;
+    if (sabaccCurrentBet > limit && score > 10) return 0;
     
     // Raise return 2; 
     if (score <= 3 && (rand() % 100 < 30)) return 2;
@@ -248,69 +250,69 @@ int dealerDecideBet() {
 
 // FAZY GRY
 
-void showStatus(bool finalReveal) {
+void sabaccShowStatus(bool finalReveal) {
     
     cout << endl << "-----------------------------------------------------------" << endl;
-    cout << " MONEY: $" << pCredits << " | TABLE POT: $" << gamePot << " | SABACC POT: $" << sabaccPot << endl;
+    cout << " MONEY: $" << sabaccCreditsPlayer << " | TABLE POT: $" << sabaccPotSabaccGame << " | SABACC POT: $" << sabaccPotSabacc << endl;
     cout << "-----------------------------------------------------------" << endl;
     
     cout << "YOUR HAND:" << endl;
     
-    printCard(pHand, pSize, false); 
+    sabaccPrintCard(sabaccHandPlayer, sabaccSizePlayer, false); 
 
     if (finalReveal) {
 
-        cout << "Score: " << calculateScore(pHand, pSize) << endl;
+        cout << "Score: " << sabaccCalculateScore(sabaccHandPlayer, sabaccSizePlayer) << endl;
     }
     
     cout << "-----------------------------------------------------------" << endl;
     
     cout << "DEALER'S HAND:" << endl;
     
-    printCard(dHand, dSize, !finalReveal);
+    sabaccPrintCard(sabaccHandDealer, sabaccSizeDealer, !finalReveal);
 
     if (finalReveal) {
 
-        cout << "Score: " << calculateScore(dHand, dSize) << endl;
+        cout << "Score: " << sabaccCalculateScore(sabaccHandDealer, sabaccSizeDealer) << endl;
     }
     
     cout << "-----------------------------------------------------------" << endl;
 }
 
-bool handleBetting() {
+bool sabaccHandleBetting() {
     
     cout << endl << "--- LICITATION ---" << endl;
-    cout << "Current rate: $" << currentBet << endl;
+    cout << "Current rate: $" << sabaccCurrentBet << endl;
     cout << "1. Call" << endl << "2. Raise" << endl << "3. Fold" << endl;
     
-    int choice = validateInput("?> Choice: ", 1, 3);
+    int choice = sabaccValidateInput("?> Choice: ", 1, 3);
 
     if (choice == 3) {
         
         cout << ">> You folded. Dealer wins the money." << endl;
         
-        dCredits += gamePot; return false; 
+        sabaccCreditsDealer += sabaccPotSabaccGame; return false; 
     }
     if (choice == 2) {
         
-        int raise = validateInput("?> How much you raise?: ", 0, 0);
+        int raise = sabaccValidateInput("?> How much you raise?: ", 0, 0);
         
-        currentBet += raise;
+        sabaccCurrentBet += raise;
     }
 
-    int dAction = dealerDecideBet();
+    int sabaccActionDealer = sabaccDealerDecideBet();
     
-    if (dAction == 0) {
+    if (sabaccActionDealer == 0) {
         
-        cout << ">> Dealer folded! You won $ " << gamePot << "1" << endl;
+        cout << ">> Dealer folded! You won $ " << sabaccPotSabaccGame << "1" << endl;
         
-        pCredits += gamePot; return false;
+        sabaccCreditsPlayer += sabaccPotSabaccGame; return false;
     } 
-    else if (dAction == 2) {
+    else if (sabaccActionDealer == 2) {
         
-        int dRaise = getCost(percentageRaise) + (rand() % 10);
+        int dRaise = sabaccGetCost(sabaccPercentageRaise) + (rand() % 10);
 
-        currentBet += dRaise;
+        sabaccCurrentBet += dRaise;
         
         cout << ">> Dealer raise for $" << dRaise << "!" << endl;
     } 
@@ -319,10 +321,10 @@ bool handleBetting() {
         cout << ">> Dealer calls." << endl;
     }
 
-    pCredits -= currentBet;
-    dCredits -= currentBet;
+    sabaccCreditsPlayer -= sabaccCurrentBet;
+    sabaccCreditsDealer -= sabaccCurrentBet;
    
-    gamePot += (currentBet * 2);
+    sabaccPotSabaccGame += (sabaccCurrentBet * 2);
    
     return true;
 }
@@ -335,127 +337,127 @@ void handleSpike() {
         
         cout << ">> Dice roll: [" << d1 << "] [" << d2 << "] !!! SPIKE !!!" << endl;
         
-        int oldP = pSize, oldD = dSize;
+        int oldP = sabaccSizePlayer, oldD = sabaccSizeDealer;
         
-        pSize = 0; dSize = 0;
+        sabaccSizePlayer = 0; sabaccSizeDealer = 0;
         
-        for (int i = 0; i < oldP; i++) pHand[pSize++] = drawCard();
-        for (int i = 0; i < oldD; i++) dHand[dSize++] = drawCard();
+        for (int i = 0; i < oldP; i++) sabaccHandPlayer[sabaccSizePlayer++] = drawCard();
+        for (int i = 0; i < oldD; i++) sabaccHandDealer[sabaccSizeDealer++] = drawCard();
     }
 }
 
-void playRound() {
+void sabaccPlayRound() {
     
-    int costEnter = getCost(percentageEnter);
-    int costSabacc = getCost(percentageSabacc);
+    int costEnter = sabaccGetCost(sabaccPercentageEnter);
+    int costSabacc = sabaccGetCost(sabaccPercentageSabacc);
     
-    if (pCredits < costEnter + costSabacc) {
+    if (sabaccCreditsPlayer < costEnter + costSabacc) {
         cout << "!> Not enough credits to play!" << endl;
-        pCredits = 0; return;
+        sabaccCreditsPlayer = 0; return;
     }
     
-    pSize = 0; 
-    dSize = 0;
+    sabaccSizePlayer = 0; 
+    sabaccSizeDealer = 0;
     
-    gamePot = costEnter * 2;
-    sabaccPot += costSabacc * 2;
+    sabaccPotSabaccGame = costEnter * 2;
+    sabaccPotSabacc += costSabacc * 2;
 
-    pCredits -= (costEnter + costSabacc); 
-    dCredits -= (costEnter + costSabacc); 
+    sabaccCreditsPlayer -= (costEnter + costSabacc); 
+    sabaccCreditsDealer -= (costEnter + costSabacc); 
     
-    currentBet = 0;
+    sabaccCurrentBet = 0;
 
-    pHand[pSize++] = drawCard(); 
-    pHand[pSize++] = drawCard();
-    dHand[dSize++] = drawCard(); 
-    dHand[dSize++] = drawCard();
+    sabaccHandPlayer[sabaccSizePlayer++] = drawCard(); 
+    sabaccHandPlayer[sabaccSizePlayer++] = drawCard();
+    sabaccHandDealer[sabaccSizeDealer++] = drawCard(); 
+    sabaccHandDealer[sabaccSizeDealer++] = drawCard();
 
     for (int turn = 1; turn <= 3; turn++) {
         
         cout << endl << "========= ROUND " << turn << " =========" << endl;
-        showStatus(false);
+        sabaccShowStatus(false);
 
         cout << endl << "--- YOUR MOVE ---" << endl;
-        cout << "1. Draw ($" << getCost(percentageDraw) << ")" << endl << "2. Swap ($" << getCost(percentageSwap) << ")" << endl << "3. Wait" << endl;
+        cout << "1. Draw ($" << sabaccGetCost(sabaccPercentageDraw) << ")" << endl << "2. Swap ($" << sabaccGetCost(sabaccPercentageSwap) << ")" << endl << "3. Wait" << endl;
         
-        int choice = validateInput("?> Choice: ", 1, 3);
+        int choice = sabaccValidateInput("?> Choice: ", 1, 3);
         
-        if (choice == 1 && pCredits >= 5) {
+        if (choice == 1 && sabaccCreditsPlayer >= 5) {
             
-            pHand[pSize++] = drawCard();
+            sabaccHandPlayer[sabaccSizePlayer++] = drawCard();
             
-            pCredits -= getCost(percentageDraw); 
-            gamePot += getCost(percentageDraw);
+            sabaccCreditsPlayer -= sabaccGetCost(sabaccPercentageDraw); 
+            sabaccPotSabaccGame += sabaccGetCost(sabaccPercentageDraw);
         } 
-        else if (choice == 2 && pSize > 0 && pCredits >= 10) {
+        else if (choice == 2 && sabaccSizePlayer > 0 && sabaccCreditsPlayer >= 10) {
             
-            string cardPrompt = ">> Card to swap (1 - " + to_string(pSize) + "): ";
+            string cardPrompt = ">> Card to swap (1 - " + to_string(sabaccSizePlayer) + "): ";
             
-            int card = validateInput(cardPrompt, 1, pSize);
+            int card = sabaccValidateInput(cardPrompt, 1, sabaccSizePlayer);
             
-            if (card > 0 && card <= pSize) {
+            if (card > 0 && card <= sabaccSizePlayer) {
                 
-                pHand[card-1] = drawCard();
+                sabaccHandPlayer[card-1] = drawCard();
                 
-                pCredits -= getCost(percentageSwap); 
-                gamePot += getCost(percentageSwap);
+                sabaccCreditsPlayer -= sabaccGetCost(sabaccPercentageSwap); 
+                sabaccPotSabaccGame += sabaccGetCost(sabaccPercentageSwap);
             }
         }
 
-        dealerAction();
+        sabaccDealerAction();
 
-        if (!handleBetting()) return;
+        if (!sabaccHandleBetting()) return;
         
         handleSpike();
     }
 
-    showStatus(true);
+    sabaccShowStatus(true);
     
-    int pScore = calculateScore(pHand, pSize);
-    int dScore = calculateScore(dHand, dSize);
-    int pAbs = myAbs(pScore), dAbs = myAbs(dScore);
+    int sabaccScorePlayer = sabaccCalculateScore(sabaccHandPlayer, sabaccSizePlayer);
+    int sabaccScoreDealer = sabaccCalculateScore(sabaccHandDealer, sabaccSizeDealer);
+    int sabaccAbsolutePlayer = sabaccAbsolute(sabaccScorePlayer), sabaccAbsoluteDealer = sabaccAbsolute(sabaccScoreDealer);
 
-    bool playerWins = (pAbs < dAbs) || (pAbs == dAbs && pScore >= dScore);
+    bool playerWins = (sabaccAbsolutePlayer < sabaccAbsoluteDealer) || (sabaccAbsolutePlayer == sabaccAbsoluteDealer && sabaccScorePlayer >= sabaccScoreDealer);
 
-    if (playerWins && pAbs <= 23) {
+    if (playerWins && sabaccAbsolutePlayer <= 23) {
         
-        cout << "!> YOU'RE A WINNER! You won $" << gamePot << "." << endl;
-        pCredits += gamePot;
+        cout << "!> YOU'RE A WINNER! You won $" << sabaccPotSabaccGame << "." << endl;
+        sabaccCreditsPlayer += sabaccPotSabaccGame;
         
-        if (pScore == 0) {
+        if (sabaccScorePlayer == 0) {
             
-            cout << "!> PURE SABACC! Bonus: $" << sabaccPot << "." << endl;
+            cout << "!> PURE SABACC! Bonus: $" << sabaccPotSabacc << "." << endl;
             
-            pCredits += sabaccPot; 
-            sabaccPot = 0;
+            sabaccCreditsPlayer += sabaccPotSabacc; 
+            sabaccPotSabacc = 0;
         }
     } 
     else {
         
         cout << "!> YOU LOST. Dealer won." << endl;
         
-        dCredits += gamePot;
+        sabaccCreditsDealer += sabaccPotSabaccGame;
     }
 }
 
-int main() {
+int sabacc(int money) {
     
     srand(time(0));
     
     cout << "=== WELCOME IN CANTYNA - SABACC CORELLIAN SPIKE ===" << endl;
     
-    startCredits = validateInput("?> Set your starting credits: ", 0, 0);
+    sabaccCreditsStart = money;
     
-    pCredits = startCredits;
-    dCredits = startCredits;
+    sabaccCreditsPlayer = sabaccCreditsStart;
+    sabaccCreditsDealer = sabaccCreditsStart;
     
     char playAgain = 'y';
     
-    while ((playAgain == 'y' || playAgain == 'Y') && pCredits > 0) {
+    while ((playAgain == 'y' || playAgain == 'Y') && sabaccCreditsPlayer > 0) {
         
-        playRound();
+        sabaccPlayRound();
         
-        if (pCredits <= 0) {
+        if (sabaccCreditsPlayer <= 0) {
             
             cout << endl << "!> Bankrut! You've been thrown out." << endl;
             break;

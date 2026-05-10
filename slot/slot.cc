@@ -5,8 +5,8 @@
 
 using namespace std;
 
-// symbols
-map<char, int> symbols = {
+// slotSymbols
+map<char, int> slotSymbols = {
     {'X', 100},    // Diament
     {'7', 50},     // Jackpot
     {'G', 25},     // Gwiazda (Wild)
@@ -17,14 +17,14 @@ map<char, int> symbols = {
     {'C', 1}       // Cherry
 };
 
-bool isCompatible(char a, char b) {
+bool slotIsCompatible(char a, char b) {
     
     if (a == 'G' || b == 'G') return true;
     
     return a == b;
 }
 
-char getWinningSymbol(char a, char b, char c) {
+char slotGetWinningSymbol(char a, char b, char c) {
     
     if (a != 'G') return a;
     if (b != 'G') return b;
@@ -33,7 +33,7 @@ char getWinningSymbol(char a, char b, char c) {
     return 'G';
 }
 
-void displayGrid(char grid[3][3])
+void slotDisplayGrid(char grid[3][3])
 {
     cout << endl << " --- SLOTS ---" << endl;
     
@@ -51,13 +51,13 @@ void displayGrid(char grid[3][3])
     cout << " -------------" << endl << endl;
 }
 
-int checkLine(char a, char b, char c, int bet) {
+int slotCheckLine(char a, char b, char c, int bet) {
     
-    if (isCompatible(a, b) && isCompatible(b, c) && isCompatible(a, c)) 
+    if (slotIsCompatible(a, b) && slotIsCompatible(b, c) && slotIsCompatible(a, c)) 
     {
-        char winSymbol = getWinningSymbol(a, b, c);
+        char winSymbol = slotGetWinningSymbol(a, b, c);
         
-        int winAmount = bet * symbols[winSymbol];
+        int winAmount = bet * slotSymbols[winSymbol];
         
         cout << ">> WIN! Combination: " << a << b << c << " (Value: " << winSymbol << ")" << endl;
         
@@ -70,19 +70,19 @@ int checkLine(char a, char b, char c, int bet) {
     
 }
 
-int main() 
+int slot(int money) 
 {
     srand(time(0));
     char grid[3][3];
     
-    char symbols[3][10] = 
+    char slotSymbols[3][10] = 
     {
         {'7', 'L', 'X', 'D', 'P', 'W', 'L', 'G', 'C', 'D'},
         {'7', 'P', 'L', 'D', 'X', 'G', 'W', 'L', 'P', 'C'},
         {'C', 'X', 'W', 'L', 'D', 'P', 'C', 'L', 'W', 'D'},
     };
     
-	int balance = 100;
+	int balance = money;
     int bet;
 
     cout << "Welcome to the Casino!" << endl;
@@ -107,38 +107,38 @@ int main()
         {
             int randModulo = rand() % 10;
             
-            grid[1][i] = symbols[i][randModulo];
+            grid[1][i] = slotSymbols[i][randModulo];
             
             switch(randModulo) 
             {
                 case 0:
-                grid[0][i] = symbols[i][9];
-                grid[2][i] = symbols[i][1];
+                grid[0][i] = slotSymbols[i][9];
+                grid[2][i] = slotSymbols[i][1];
                 break;
                 
                 case 9:
-                grid[0][i] = symbols[i][8];
-                grid[2][i] = symbols[i][0];
+                grid[0][i] = slotSymbols[i][8];
+                grid[2][i] = slotSymbols[i][0];
                 break;
                 
                 default:
-                grid[0][i] = symbols[i][randModulo - 1];
-                grid[2][i] = symbols[i][randModulo + 1];
+                grid[0][i] = slotSymbols[i][randModulo - 1];
+                grid[2][i] = slotSymbols[i][randModulo + 1];
                 break;
             }
         }
         
-        displayGrid(grid);
+        slotDisplayGrid(grid);
         int win = 0;
         
         // Sprawdzanie rzędów
-        win += checkLine(grid[0][0], grid[0][1], grid[0][2], bet);
-        win += checkLine(grid[1][0], grid[1][1], grid[1][2], bet);
-        win += checkLine(grid[2][0], grid[2][1], grid[2][2], bet);
+        win += slotCheckLine(grid[0][0], grid[0][1], grid[0][2], bet);
+        win += slotCheckLine(grid[1][0], grid[1][1], grid[1][2], bet);
+        win += slotCheckLine(grid[2][0], grid[2][1], grid[2][2], bet);
         
         // Sprawdzanie skosów
-        win += checkLine(grid[0][0], grid[1][1], grid[2][2], bet);
-        win += checkLine(grid[2][0], grid[1][1], grid[0][2], bet);
+        win += slotCheckLine(grid[0][0], grid[1][1], grid[2][2], bet);
+        win += slotCheckLine(grid[2][0], grid[1][1], grid[0][2], bet);
         
         if (win > 0) 
         {

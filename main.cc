@@ -104,7 +104,7 @@ Player getCurrentPlayer(string playerName) {
 			currentPlayer.setNickname(playerName);
 			currentPlayer.setPassword(password);
 			currentPlayer.setMoney(stoi(playerData));
-			cout << ">> Login successful. Welcome, " << currentPlayer.getNickname() << "!" << endl;
+			cout << ">> Login successful. Welcome, " << currentPlayer.getNickname() << "!" << endl  << endl;
 			file.close();
 			return currentPlayer;
 		}
@@ -1687,8 +1687,8 @@ int slot(int money)
 
 // ZMIENNE GLOBALNE
 
-int sabaccHandPlayer[15];
-int sabaccHandDealer[15];
+int sabaccHandPlayer[5];
+int sabaccHandDealer[5];
 
 int sabaccSizePlayer = 0; 
 int sabaccSizeDealer = 0;
@@ -1791,11 +1791,11 @@ void sabaccPrintCard(int hand[], int size, bool hide) {
         //lines[3] += "\u2502   " + valueRight + "\u2502 ";
         //lines[4] += "\u2514\u2500\u2500\u2500\u2500\u2500\u2518 ";
 
-        lines[0] += " -----  ";
+        lines[0] += ".-----. ";
         lines[1] += "|" + valueLeft + "   | ";
         lines[2] += "|  " + symbol + "  | ";
         lines[3] += "|   " + valueRight + "| ";
-        lines[4] += " -----  ";
+        lines[4] += "'-----' ";
     }
 
     for (int i = 0; i < 5; i++) {
@@ -2177,7 +2177,7 @@ int main()
 			string playerName;
 			cin >> playerName;
 			if(fileExists(playerName)){
-				cout << "Account with that username already exists. Please choose a different username." << endl;
+				cout << "!> Account with that username already exists. Please choose a different username." << endl << endl;
 			}
 			else {
 				createPlayer(playerName);
@@ -2188,7 +2188,7 @@ int main()
 			cout << "!> Invalid choice. Please enter L to log in or R to register: ";
 		}
 	}
-	cout << ">> Current bank: " << currentPlayer.getMoney() << endl;
+	cout << ">> Current bank: " << currentPlayer.getMoney() << endl << endl;
 	string depositChoice = "";
 	while (true) {
 		if (currentPlayer.getMoney() < 100) {

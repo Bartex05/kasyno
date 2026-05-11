@@ -1693,14 +1693,13 @@ int sabaccHandDealer[5];
 int sabaccSizePlayer = 0; 
 int sabaccSizeDealer = 0;
 
-int sabaccCreditsPlayer = 150; 
-int sabaccCreditsDealer = 150; 
+int sabaccCreditsPlayer = 0; 
+int sabaccCreditsDealer = 0; 
+int sabaccCreditsStart = 0;
 
-int sabaccPotSabaccGame = 0; 
+int sabaccPotGame = 0; 
 int sabaccPotSabacc = 0; 
 int sabaccCurrentBet = 0;
-
-int sabaccCreditsStart = 0;
 
 // STAŁE PROCENTOWE
 
@@ -1889,7 +1888,7 @@ void sabaccDealerAction() {
             sabaccHandDealer[bestIndex] = sabaccDrawCard();
             
             sabaccCreditsDealer -= swapCost;
-            sabaccPotSabaccGame += swapCost;
+            sabaccPotGame += swapCost;
             
             cout << ">> Dealer paid $" << swapCost << " to swap a card." << endl;
             return; 
@@ -1903,7 +1902,7 @@ void sabaccDealerAction() {
         sabaccHandDealer[sabaccSizeDealer++] = sabaccDrawCard();
         
         sabaccCreditsDealer -= drawCost;
-        sabaccPotSabaccGame += drawCost;
+        sabaccPotGame += drawCost;
         
        cout << ">> Dealer paid $" << drawCost << " to draw a card." << endl;
     }
@@ -1930,7 +1929,7 @@ int sabaccDealerDecideBet() {
 void sabaccShowStatus(bool finalReveal) {
     
     cout << endl << "-----------------------------------------------------------" << endl;
-    cout << " MONEY: $" << sabaccCreditsPlayer << " | TABLE POT: $" << sabaccPotSabaccGame << " | SABACC POT: $" << sabaccPotSabacc << endl;
+    cout << " MONEY: $" << sabaccCreditsPlayer << " | TABLE POT: $" << sabaccPotGame << " | SABACC POT: $" << sabaccPotSabacc << endl;
     cout << "-----------------------------------------------------------" << endl;
     
     cout << "YOUR HAND:" << endl;
@@ -1981,7 +1980,7 @@ bool sabaccHandleBetting() {
     
     if (sabaccActionDealer == 0) {
         
-        cout << ">> Dealer folded! You won $ " << sabaccPotSabaccGame << "1" << endl;
+        cout << ">> Dealer folded! You won $ " << sabaccPotGame << "1" << endl;
         
         sabaccCreditsPlayer += sabaccPotSabaccGame; return false;
     } 
@@ -2001,7 +2000,7 @@ bool sabaccHandleBetting() {
     sabaccCreditsPlayer -= sabaccCurrentBet;
     sabaccCreditsDealer -= sabaccCurrentBet;
    
-    sabaccPotSabaccGame += (sabaccCurrentBet * 2);
+    sabaccPotGame += (sabaccCurrentBet * 2);
    
     return true;
 }
@@ -2036,7 +2035,7 @@ void sabaccPlayRound() {
     sabaccSizePlayer = 0; 
     sabaccSizeDealer = 0;
     
-    sabaccPotSabaccGame = costEnter * 2;
+    sabaccPotGame = costEnter * 2;
     sabaccPotSabacc += costSabacc * 2;
 
     sabaccCreditsPlayer -= (costEnter + costSabacc); 
@@ -2064,7 +2063,7 @@ void sabaccPlayRound() {
             sabaccHandPlayer[sabaccSizePlayer++] = sabaccDrawCard();
             
             sabaccCreditsPlayer -= sabaccGetCost(sabaccPercentageDraw); 
-            sabaccPotSabaccGame += sabaccGetCost(sabaccPercentageDraw);
+            sabaccPotGame += sabaccGetCost(sabaccPercentageDraw);
         } 
         else if (choice == 2 && sabaccSizePlayer > 0 && sabaccCreditsPlayer >= 10) {
             
@@ -2077,7 +2076,7 @@ void sabaccPlayRound() {
                 sabaccHandPlayer[card-1] = sabaccDrawCard();
                 
                 sabaccCreditsPlayer -= sabaccGetCost(sabaccPercentageSwap); 
-                sabaccPotSabaccGame += sabaccGetCost(sabaccPercentageSwap);
+                sabaccPotGame += sabaccGetCost(sabaccPercentageSwap);
             }
         }
 
@@ -2098,7 +2097,7 @@ void sabaccPlayRound() {
 
     if (playerWins && sabaccAbsolutePlayer <= 23) {
         
-        cout << "!> YOU'RE A WINNER! You won $" << sabaccPotSabaccGame << "." << endl;
+        cout << "!> YOU'RE A WINNER! You won $" << sabaccPotGame << "." << endl;
         sabaccCreditsPlayer += sabaccPotSabaccGame;
         
         if (sabaccScorePlayer == 0) {

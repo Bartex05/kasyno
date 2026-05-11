@@ -67,42 +67,30 @@ bool isNumber(string str) {
 //  Funkcja do tworzenia pliku nowego gracza
 void createPlayer(string playerName) {
 	string x;
-	while (true) {
-		if (fileExists(playerName)) {
-			cout << "Player already exists please input a different username for registration: ";
-			cin >> playerName;
-		}
-		if (!fileExists(playerName)) {
-			ofstream file(playerName + ".txt", ios::out);
-			cout << ">> Registration: " << endl;
-			cout << "?> Please set a password: ";
+	if (!fileExists(playerName)) {
+		ofstream file(playerName + ".txt", ios::out);
+		cout << ">> Registration: " << endl;
+		cout << "?> Please set a password: ";
+		cin >> x;
+		file << x << endl;
+		cout << "?> What is your initial bet?: ";
+		while (true) {
 			cin >> x;
-			file << x << endl;
-			cout << "?> What is your initial bet?: ";
-			while (true) {
-				cin >> x;
-				if (isNumber(x)) {
-					file << x;
-					break;
-				}
-				else {
-					cout << "!> " << x << " is not a number. Enter amount: ";
-				}
+			if (isNumber(x)) {
+				file << x;
+				break;
 			}
-			cout << ">> User created successfully. You can now log in." << endl;
-			file.close();
+			else {
+				cout << "!> " << x << " is not a number. Enter amount: ";
+			}
 		}
+		cout << ">> User created successfully. You can log in." << endl;
+		file.close();
 	}
 }
 
 //  Funkcja do pobierania danych gracza z pliku o nazwie gracza i przekazywania danych do currentPlayer
 Player getCurrentPlayer(string playerName) {
-
-	while(!fileExists(playerName)){
-		cout << "!> Player does not exist. Please retry: ";
-		cin >> playerName;
-	}
-
 	ifstream file(playerName + ".txt", ios::in);
 	Player currentPlayer;
 	string playerData;
@@ -2165,26 +2153,36 @@ int sabacc(int money) {
 int main()
 {
 	Player currentPlayer;
-	cout << "===> CHOOSE AN OPTION <===" << endl << "L. Login" << endl << "R. Register" << endl << "?> Coice: ";
 	string loginChoice;
 	while (true) {
+		cout << "===> CHOOSE AN OPTION <===" << endl << "L. Login" << endl << "R. Register" << endl << "?> Choice: ";
 		cin >> loginChoice;
 		cout << endl;
 		if (loginChoice == "L" || loginChoice == "l") {
 			cout << "?> Enter your username: ";
 			string playerName;
 			cin >> playerName;
-			currentPlayer = getCurrentPlayer(playerName);
-			break;
+			if (fileExists(playerName)) {
+				currentPlayer = getCurrentPlayer(playerName);
+				break;
+			}
+			else {
+				cout << "!> No account with that username exists. Please register first." << endl;
+				continue;
+			}
+			
 		}
 		else if (loginChoice == "R" || loginChoice == "r") {
 			cout << "?> Enter your desired username: ";
 			string playerName;
 			cin >> playerName;
-
-			createPlayer(playerName);
-			currentPlayer = getCurrentPlayer(playerName);
-			break;
+			if(fileExists(playerName)){
+				cout << "Account with that username already exists. Please choose a different username." << endl;
+			}
+			else {
+				createPlayer(playerName);
+				break;
+			}
 		}
 		else {
 			cout << "!> Invalid choice. Please enter L to log in or R to register: ";
@@ -2243,7 +2241,6 @@ int main()
         cout<<"2. Roulette"<<endl;
 		cout<<"3. Slot"<<endl;
 		cout<<"4. Sabacc"<<endl;
-		// Do dopisania więcej
 
         cout<<"0. Quit"<<endl;
 

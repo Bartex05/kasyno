@@ -67,28 +67,31 @@ bool isNumber(string str) {
 //  Funkcja do tworzenia pliku nowego gracza
 void createPlayer(string playerName) {
 	string x;
-	if (!fileExists(playerName)) {
-		ofstream file(playerName + ".txt", ios::out);
-		cout << ">> Registration: " << endl;
-		cout << "?> Please set a password: ";
-		cin >> x;
-		file << x << endl;
-		cout << "?> What is your initial bet?: ";
-		while (true) {
-			cin >> x;
-			if (isNumber(x)) {
-				file << x;
-				break;
-			}
-			else {
-				cout << "!> " << x << " is not a number. Enter amount: ";
-			}
+	while (true) {
+		if (fileExists(playerName)) {
+			cout << "Player already exists please input a different username for registration: ";
+			cin >> playerName;
 		}
-		cout << ">> User created successfully. You can now log in." << endl;
-		file.close();
-	}
-	else {
-		cout << "!> Player already exists. Please select login or create using a different username." << endl;
+		if (!fileExists(playerName)) {
+			ofstream file(playerName + ".txt", ios::out);
+			cout << ">> Registration: " << endl;
+			cout << "?> Please set a password: ";
+			cin >> x;
+			file << x << endl;
+			cout << "?> What is your initial bet?: ";
+			while (true) {
+				cin >> x;
+				if (isNumber(x)) {
+					file << x;
+					break;
+				}
+				else {
+					cout << "!> " << x << " is not a number. Enter amount: ";
+				}
+			}
+			cout << ">> User created successfully. You can now log in." << endl;
+			file.close();
+		}
 	}
 }
 

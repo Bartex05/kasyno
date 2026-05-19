@@ -1967,7 +1967,7 @@ bool sabaccHandleBetting() {
         
         cout << ">> You folded. Dealer wins the money." << endl;
         
-        sabaccCreditsDealer += sabaccPotSabaccGame; return false; 
+        sabaccCreditsDealer += sabaccPotGame; return false; 
     }
     if (choice == 2) {
         
@@ -1982,7 +1982,7 @@ bool sabaccHandleBetting() {
         
         cout << ">> Dealer folded! You won $ " << sabaccPotGame << "1" << endl;
         
-        sabaccCreditsPlayer += sabaccPotSabaccGame; return false;
+        sabaccCreditsPlayer += sabaccPotGame; return false;
     } 
     else if (sabaccActionDealer == 2) {
         
@@ -2098,7 +2098,7 @@ void sabaccPlayRound() {
     if (playerWins && sabaccAbsolutePlayer <= 23) {
         
         cout << "!> YOU'RE A WINNER! You won $" << sabaccPotGame << "." << endl;
-        sabaccCreditsPlayer += sabaccPotSabaccGame;
+        sabaccCreditsPlayer += sabaccPotGame;
         
         if (sabaccScorePlayer == 0) {
             
@@ -2112,7 +2112,7 @@ void sabaccPlayRound() {
         
         cout << "!> YOU LOST. Dealer won." << endl;
         
-        sabaccCreditsDealer += sabaccPotSabaccGame;
+        sabaccCreditsDealer += sabaccPotGame;
     }
 }
 
